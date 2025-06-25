@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Traits\ApiResponse;
-use App\Models\Craftsperson;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Craftsperson;
 use App\Models\CraftspersonAvailability;
 use App\Models\CraftspersonServiceImage;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OnBodingController extends Controller
@@ -49,12 +49,14 @@ class OnBodingController extends Controller
             /**
              * Create craftspeople
              */
-            $data = Craftsperson::create([
-                'user_id'     => $user->id,
-                'category_id' => $request->category_id,
-                'price'       => $request->price,
-                'description' => $request->description,
-            ]);
+            $data = Craftsperson::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'category_id' => $request->category_id,
+                    'price'       => $request->price,
+                    'description' => $request->description,
+                ]
+            );
 
             /**
              * Handle images

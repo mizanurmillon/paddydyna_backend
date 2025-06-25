@@ -111,11 +111,13 @@ class RegisterController extends Controller
             $user->save();
 
             if ($request->input('role') == 'craftsperson') {
-                Craftsperson::create([
-                    'user_id' => $user->id,
-                    'craftsperson_id' => $craftspersonIdName,
-                    'police_verification_document' => $policeVerificationDocumentName
-                ]);
+                Craftsperson::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'craftsperson_id' => $craftspersonIdName,
+                        'police_verification_document' => $policeVerificationDocumentName
+                    ]
+                );
             }
 
             $this->sendOtp($user);
