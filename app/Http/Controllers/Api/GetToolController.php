@@ -22,7 +22,7 @@ class GetToolController extends Controller
 
         $bookedToolIds = ToolBooking::where('user_id', $user->id)->whereNot('status', 'completed')->whereNot('status', 'cancelled')->pluck('tool_id')->toArray();
 
-        $stockedToolIds = ToolBooking::where('user_id', $user->id)->whereNot('status', 'completed')->whereNot('status', 'cancelled')->pluck('tool_id')->toArray();
+        $stockedToolIds = ToolBooking::whereNot('status', 'completed')->whereNot('status', 'cancelled')->pluck('tool_id')->toArray();
 
         $data = Tool::with(['images', 'user:id,name,avatar', 'user.addresses:id,user_id,address,latitude,longitude'])->select('id', 'user_id', 'name', 'price', 'deposit')->withAvg('toolReviews', 'rating')->get()
             ->map(function ($tool) use ($user, $bookedToolIds, $stockedToolIds) {
@@ -58,10 +58,15 @@ class GetToolController extends Controller
 
     public function toolDetails($id)
     {
+
         $data = Tool::with('images', 'availabilities', 'toolReviews.user:id,name,avatar')->withCount('toolReviews')->withAvg('toolReviews', 'rating')->find($id);
+
+        $stockedToolIds = ToolBooking::where('tool_id', $id)->whereNot('status', 'completed')->whereNot('status', 'cancelled')->first();
 
         if ($data) {
             $data->tool_reviews_avg_rating = $data->tool_reviews_avg_rating ?? 0;
+
+            $data->is_stocked = $stockedToolIds ? true : false;
         }
 
         if (! $data) {
