@@ -58,7 +58,7 @@ class GetToolController extends Controller
 
     public function toolDetails($id)
     {
-        $data = Tool::with('images', 'availabilities', 'toolReviews')->withCount('toolReviews')->withAvg('toolReviews', 'rating')->find($id);
+        $data = Tool::with('images', 'availabilities', 'toolReviews.user:id,name,avatar')->withCount('toolReviews')->withAvg('toolReviews', 'rating')->find($id);
 
         if ($data) {
             $data->tool_reviews_avg_rating = $data->tool_reviews_avg_rating ?? 0;

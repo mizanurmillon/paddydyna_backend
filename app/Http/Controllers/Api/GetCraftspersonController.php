@@ -53,13 +53,17 @@ class GetCraftspersonController extends Controller
                     });
             });
         }
-        if($request->has('avg_review'))
-        {
-            $query->whereHas('giver_reviews', function ($q) use ($request) {
-                $q->where('rating', '>=', $request->avg_review);
-            });
+        if ($request->has('avg_review')) {
+            $avgReview = floatval($request->avg_review);
+            $query->withAvg('giver_reviews', 'rating')
+                ->having('giver_reviews_avg_rating', '>=', $avgReview);
         }
         $data = $query->get();
+
+        $data->transform(function ($item) {
+            $item->giver_reviews_avg_rating = $item->giver_reviews_avg_rating ?? 0;
+            return $item;
+        });
 
         if (! $data) {
             return $this->error([], 'Craftsperson Not Found', 404);
@@ -71,7 +75,7 @@ class GetCraftspersonController extends Controller
     public function craftspersonDetails($id)
     {
         $data = User::where('id', $id)->where('role', 'craftsperson')
-            ->with('addresses', 'craftsperson', 'craftsperson.category', 'craftsperson.availability', 'craftsperson.images','giver_reviews.customer:id,name,avatar')
+            ->with('addresses', 'craftsperson', 'craftsperson.category', 'craftsperson.availability', 'craftsperson.images', 'giver_reviews.customer:id,name,avatar')
             ->withCount('giver_reviews')
             ->withAvg('giver_reviews', 'rating')
             ->first();
