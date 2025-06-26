@@ -44,9 +44,9 @@ class ToolBookingController extends Controller
 
         $toolBooking = new ToolBooking();
 
-        if ($toolBooking->overlaps($request->start_time, $request->end_time, $request->day)) {
-            return $this->error([], 'This tool this time slot is already booked', 400);
-        }
+        // if ($toolBooking->overlaps($request->start_time, $request->end_time, $request->day)) {
+        //     return $this->error([], 'This tool this time slot is already booked', 400);
+        // }
 
         $data = $toolBooking->create([
             'user_id'      => $user->id,
