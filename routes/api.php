@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
+use App\Http\Controllers\Api\ToolReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,6 +146,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
          */
         Route::controller(ToolBookingController::class)->group(function () {
             Route::post('/tool-booking/{id}', 'toolBooking');
+        });
+
+        Route::controller(ToolReviewController::class)->group(function () {
+            Route::post('/add-tool-review/{id}', 'addToolReview');
         });
 
     });

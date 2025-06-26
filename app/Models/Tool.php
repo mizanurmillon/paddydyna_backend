@@ -54,4 +54,9 @@ class Tool extends Model
 
         return false;
     }
+
+    public function toolReviews()
+    {
+        return $this->hasMany(ToolReview::class);
+    }
 }
