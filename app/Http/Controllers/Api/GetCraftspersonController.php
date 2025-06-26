@@ -56,8 +56,22 @@ class GetCraftspersonController extends Controller
         if ($request->has('avg_review')) {
             $avgReview = floatval($request->avg_review);
             $query->withAvg('giver_reviews', 'rating')
-                ->having('giver_reviews_avg_rating', '>=', $avgReview);
+                ->having('giver_reviews_avg_rating', $avgReview);
         }
+
+        if ($request->has('price_range')) {
+            $priceRange = $request->price_range; // Example: [20, 45]
+
+            if (is_array($priceRange) && count($priceRange) === 2) {
+                $minPrice = floatval($priceRange[0]);
+                $maxPrice = floatval($priceRange[1]);
+
+                $query->whereHas('craftsperson', function ($q) use ($minPrice, $maxPrice) {
+                    $q->whereBetween('price', [$minPrice, $maxPrice]);
+                });
+            }
+        }
+
         $data = $query->get();
 
         $data->transform(function ($item) {

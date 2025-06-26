@@ -45,9 +45,9 @@ class BookingController extends Controller
 
         $booking = new Booking();
 
-        if($booking->overlaps($request->start_time, $request->end_time, $request->day)) {
-            return $this->error([], 'This craftsman this time slot is already booked', 400);
-        }
+        // if($booking->overlaps($request->start_time, $request->end_time, $request->day)) {
+        //     return $this->error([], 'This craftsman this time slot is already booked', 400);
+        // }
 
         $data = Booking::create([
             'user_id'             => $user->id,
