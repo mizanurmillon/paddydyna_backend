@@ -20,7 +20,7 @@ class AddressController extends Controller
             'street' => 'nullable|string|max:225',
             'post_code' => 'nullable|string|max:225',
             'apartment' => 'nullable|string|max:225',
-            'type' => 'required|in:home,work',
+            'type' => 'nullable|in:home,work,other',
         ]);
 
         if ($validator->fails()) {
