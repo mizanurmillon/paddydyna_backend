@@ -1,12 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Models\Tool;
-use App\Models\User;
-use App\Models\ToolBooking;
-use App\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
-use function Laravel\Prompts\select;
+use App\Models\Tool;
+use App\Models\ToolBooking;
+use App\Models\User;
+use App\Traits\ApiResponse;
 
 class GetToolController extends Controller
 {
@@ -17,7 +16,7 @@ class GetToolController extends Controller
     {
         $user = User::with('addresses')->where('id', auth()->user()->id)->first();
 
-        if (!$user) {
+        if (! $user) {
             return $this->error([], 'User Not Found', 404);
         }
 
@@ -25,14 +24,14 @@ class GetToolController extends Controller
 
         $stockedToolIds = ToolBooking::where('user_id', $user->id)->whereNot('status', 'completed')->whereNot('status', 'cancelled')->pluck('tool_id')->toArray();
 
-        $data = Tool::with(['images','user:id,name,avatar','user.addresses:id,user_id,address,latitude,longitude'])->select('id', 'user_id', 'name', 'price', 'deposit')->withAvg('toolReviews', 'rating')->get()
-            ->map(function ($tool) use ($user,$bookedToolIds,$stockedToolIds) {
+        $data = Tool::with(['images', 'user:id,name,avatar', 'user.addresses:id,user_id,address,latitude,longitude'])->select('id', 'user_id', 'name', 'price', 'deposit')->withAvg('toolReviews', 'rating')->get()
+            ->map(function ($tool) use ($user, $bookedToolIds, $stockedToolIds) {
 
                 // Format average rating
                 $tool->tool_reviews_avg_rating = number_format($tool->tool_reviews_avg_rating, 2);
 
-                // Distance calculation
-                $from = $user->addresses->first();  // assuming single address
+                                                   // Distance calculation
+                $from = $user->addresses->first(); // assuming single address
                 $to   = $tool->user->addresses->first();
 
                 if ($from && $to) {
@@ -45,7 +44,7 @@ class GetToolController extends Controller
                 } else {
                     $tool->distance_km = 0;
                 }
-                $tool->is_booked = in_array($tool->id, $bookedToolIds);
+                $tool->is_booked  = in_array($tool->id, $bookedToolIds);
                 $tool->is_stocked = in_array($tool->id, $stockedToolIds);
                 return $tool;
             });
@@ -57,11 +56,13 @@ class GetToolController extends Controller
         return $this->success($data, 'Tools Found', 200);
     }
 
-    
-
     public function toolDetails($id)
     {
         $data = Tool::with('images', 'availabilities', 'toolReviews')->withCount('toolReviews')->withAvg('toolReviews', 'rating')->find($id);
+
+        if ($data) {
+            $data->tool_reviews_avg_rating = $data->tool_reviews_avg_rating ?? 0;
+        }
 
         if (! $data) {
             return $this->error([], 'Tool Not Found', 404);

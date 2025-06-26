@@ -53,6 +53,12 @@ class GetCraftspersonController extends Controller
                     });
             });
         }
+        if($request->has('avg_review'))
+        {
+            $query->whereHas('giver_reviews', function ($q) use ($request) {
+                $q->where('rating', '>=', $request->avg_review);
+            });
+        }
         $data = $query->get();
 
         if (! $data) {

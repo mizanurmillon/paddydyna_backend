@@ -45,9 +45,9 @@ class UserController extends Controller {
         $validator = Validator::make($request->all(), [
             'avatar'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
             'name'    => 'required|string|max:255',
-            'email'   => 'required|string|email|max:255|unique:users',
-            'phone'   => 'required|string|max:20',
-            'date_of_birth' => 'required|date',
+            'email'   => 'nullable|string|email|max:255|unique:users,email,' . auth()->user()->id,
+            'phone'   => 'nullable|string|max:20',
+            'date_of_birth' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
