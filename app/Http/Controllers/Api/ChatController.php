@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Events\UnReadMessage;
 use App\Events\ReactSentEvent;
 use App\Events\MessageSentEvent;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,11 @@ class ChatController extends Controller
     {
         $user = auth()->user();
 
-        $latestMessages = $user->conversations()->with(['sender:id,name,avatar', 'receiver:id,name,avatar', 'lastMessage:id,sender_id,receiver_id,conversation_id,message,is_read,created_at'])
+        $latestMessages = $user->conversations()->with([
+            'participants' => function ($query) {
+                $query->with('user:id,name,avatar')->where('user_id', '!=', auth()->id());
+            },
+            'lastMessage:id,sender_id,receiver_id,conversation_id,message,is_read,created_at'])
         ->withCount('unreadMessages')
         ->orderBy('updated_at', 'desc')->get();
         return $this->success($latestMessages, 'Conversations fetched successfully.', 200);
@@ -66,17 +71,27 @@ class ChatController extends Controller
         $user = auth()->user();
 
         try {
-
-            $conversations = Conversation::where('sender_id', $user->id)->where('receiver_id', $id)->orWhere('sender_id', $id)->where('receiver_id', $user->id)->first();
+            DB::beginTransaction();
+            
+            $conversations = Conversation::whereHas('participants', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })
+                ->whereHas('participants', function ($q) use ($id) {
+                    $q->where('user_id', $id);
+                })
+                ->where('type', 'private')
+                ->first();
 
             if (! $conversations) {
-               $conversations = Conversation::create([
-                    'sender_id'   => $user->id,
-                    'receiver_id' => $id,
-                    'type'        => 'private',
+                $conversations = Conversation::create([
+                    'type' => 'private',
+                ]);
+
+                $conversations->participants()->createMany([
+                    ['user_id' => $user->id],
+                    ['user_id' => $id],
                 ]);
             }
-            
 
             $data = Message::create([
                 'sender_id'   => $user->id,
@@ -97,9 +112,11 @@ class ChatController extends Controller
 
             # Broadcast the unread message
             broadcast(new UnReadMessage($data->sender_id, $data->receiver_id, $data, $unreadMessageCount))->toOthers();
+            DB::commit();
 
             return $this->success($data, 'Message sent successfully.', 200);
         } catch (\Exception $e) {
+            DB::commit();
             return $this->error([], $e->getMessage(), 404);
         }
     }

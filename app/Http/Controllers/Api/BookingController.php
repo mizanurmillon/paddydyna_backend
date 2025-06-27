@@ -82,8 +82,8 @@ class BookingController extends Controller
 
         $validator = Validator::make($request->all(), [
             'day'                 => 'required|string|max:255',
-            'start_time'          => 'required|string|max:255',
-            'end_time'            => 'required|string|max:255',
+            'start_time'          => 'nullable|string|max:255',
+            'end_time'            => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
