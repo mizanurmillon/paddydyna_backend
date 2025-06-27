@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller {
     use ApiResponse;
@@ -137,6 +138,39 @@ class UserController extends Controller {
             $user->delete();
 
             return $this->success([], 'User deleted successfully', 200);
+        } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
+        }
+    }
+
+    public function changePassword(Request $request) {
+        
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string|min:8',
+            'new_password'     => 'required|string|min:8',
+            'confirm_password' => 'required|string|min:8|same:new_password',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors(), "Validation Error", 422);
+        }
+
+        try {
+            $user = auth()->user();
+
+            if (!$user) {
+                return $this->error([], "User Not Found", 404);
+            }
+
+            if (!Hash::check($request->current_password, $user->password)) {
+                return $this->error([], "Current password is incorrect", 422);
+            }
+
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+
+            return $this->success([], 'Password changed successfully', 200);
         } catch (\Exception $e) {
             return $this->error([], $e->getMessage(), 500);
         }

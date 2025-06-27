@@ -74,6 +74,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         Route::post('/data/update', 'userUpdate');
         Route::post('/logout', 'logoutUser');
         Route::delete('/delete', 'deleteUser');
+        Route::post('/change-password', 'changePassword');
     });
 
     Route::controller(AddressController::class)->group(function () {
