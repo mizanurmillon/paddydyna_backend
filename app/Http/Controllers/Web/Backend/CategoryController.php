@@ -47,6 +47,7 @@ class CategoryController extends Controller
                             </a>
                             </div>';
                 })
+                
                 ->rawColumns(['image', 'status', 'action'])
                 ->make();
         }

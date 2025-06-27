@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\CategoryController;
 use App\Http\Controllers\Web\Backend\DashboardController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Backend\CraftspersonController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -14,4 +15,9 @@ Route::controller(CategoryController::class)->group(function () {
     Route::post('/categories/{id}/update', 'update')->name('admin.categories.update');
     Route::delete('/categories/{id}/delete', 'destroy')->name('admin.categories.destroy');
     Route::post('/categories/{id}/status', 'status')->name('admin.categories.status');
+});
+
+Route::controller(CraftspersonController::class)->group(function () {
+    Route::get('/craftsperson', 'index')->name('admin.craftsperson.index');
+    Route::post('/craftsperson/{id}/status', 'status')->name('admin.craftsperson.status');
 });
