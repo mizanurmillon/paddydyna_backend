@@ -50,7 +50,7 @@ class CraftspersonController extends Controller
                 })
                 ->addColumn('view', function ($data) {
                     return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                              <a href="' . route('admin.categories.edit', ['id' => $data->id]) . '" type="button" class="text-white btn btn-primary" title="Edit">
+                              <a href="' . route('admin.craftsperson.show', ['id' => $data->id]) . '" type="button" class="text-white btn btn-primary" title="view">
                               <i class="bi bi-eye"></i>
                               </a>
                             </div>';
@@ -97,5 +97,11 @@ class CraftspersonController extends Controller
                 'data'    => $data,
             ]);
         }
+    }
+
+    public function show(int $id)
+    {
+        $data = User::with('addresses','craftsperson','craftsperson.category','craftsperson.availability')->where('id', $id)->first();
+        return view('backend.layouts.craftsperson.show', compact('data'));
     }
 }

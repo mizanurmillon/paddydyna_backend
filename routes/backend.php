@@ -20,4 +20,5 @@ Route::controller(CategoryController::class)->group(function () {
 Route::controller(CraftspersonController::class)->group(function () {
     Route::get('/craftsperson', 'index')->name('admin.craftsperson.index');
     Route::post('/craftsperson/{id}/status', 'status')->name('admin.craftsperson.status');
+    Route::get('/craftsperson/{id}/show', 'show')->name('admin.craftsperson.show');
 });
