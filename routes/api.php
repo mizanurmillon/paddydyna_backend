@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\ConnectAccount;
 use App\Http\Controllers\Api\ToolController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReviewController;
@@ -13,13 +14,13 @@ use App\Http\Controllers\Api\MyBookingController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\JobRequestController;
 use App\Http\Controllers\Api\SocialAuthController;
+use App\Http\Controllers\Api\ToolReviewController;
 use App\Http\Controllers\Api\ToolBookingController;
 use App\Http\Controllers\Api\Auth\AddressController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
-use App\Http\Controllers\Api\ToolReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         Route::post('/add/address', 'addAddress');
         Route::post('/update/address/{id}', 'updateAddress');
         Route::delete('/delete/address/{id}', 'deleteAddress');
+    });
+
+    Route::controller(ConnectAccount::class)->prefix('stripe/account')->group(function () {
+        Route::post('/connect', 'connectAccount');
     });
 
     /**
@@ -200,4 +205,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
  */
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getCategories');
+});
+
+
+Route::controller(ConnectAccount::class)->prefix('instructor')->group(function () {
+    Route::get('/connect/success', 'success')->name('connect.success');
+    Route::get('/connect/cancel', 'cancel')->name('connect.cancel');
 });
