@@ -19,6 +19,7 @@ class SystemSettingSeeder extends Seeder
                 'title'          => 'The Title',
                 'email'          => 'support@gmail.com',
                 'system_name'    => 'Laravel Stater Kit',
+                'platform_fee'   => 10,
                 'copyright_text' => 'Copyright © 2017 - 2024 DESIGN AND DEVELOPED BY ❤️',
                 'logo'           => null,
                 'favicon'        => null,

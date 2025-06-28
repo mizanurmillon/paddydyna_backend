@@ -42,6 +42,19 @@
                             <div class="row">
                                 <div class="col-md-6 mt-4">
                                     <div class="input-style-1">
+                                        <label for="platform_fee">Platform Fee:</label>
+                                        <input type="platform_fee" placeholder="Enter Platform Fee" id="platform_fee"
+                                            class="form-control @error('platform_fee') is-invalid @enderror" name="platform_fee"
+                                            value="{{ $setting->platform_fee ?? '' }}" />
+                                        @error('platform_fee')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-4">
+                                    <div class="input-style-1">
                                         <label for="title">Title:</label>
                                         <input type="text" placeholder="Enter Title" id="title"
                                             class="form-control @error('title') is-invalid @enderror" name="title"
@@ -54,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mt-4">
+                                <div class="col-md-12 mt-4">
                                     <div class="input-style-1">
                                         <label for="email">Email:</label>
                                         <input type="email" placeholder="Enter Email" id="email"

@@ -12,40 +12,68 @@ class GetCraftspersonController extends Controller
 
     public function getCraftsperson(Request $request)
     {
+
+        $latitude  = $request->query('latitude');
+        $longitude = $request->query('longitude');
+        $radius    = $request->query('radius', 20);
+
         $user = auth()->user();
 
-        // dd($user->addresses);
-
         $query = User::where('role', 'craftsperson')
-            ->with('addresses', 'craftsperson', 'craftsperson.category', 'craftsperson.availability', 'craftsperson.images')
+            ->with([
+                'addresses',
+                'craftsperson',
+                'craftsperson.category',
+                'craftsperson.availability',
+                'craftsperson.images',
+            ])
             ->withCount('giver_reviews')
             ->withAvg('giver_reviews', 'rating');
 
-        if ($user->addresses->isNotEmpty() && $request->radius) {
+        if ($latitude && $longitude) {
+            $query->whereHas('addresses', function ($q) use ($latitude, $longitude, $radius) {
+                $haversine = "(6371 * acos(
+                    cos(radians($latitude)) * cos(radians(latitude)) *
+                    cos(radians(longitude) - radians($longitude)) +
+                    sin(radians($latitude)) * sin(radians(latitude))
+                ))";
+
+                $q->whereRaw("$haversine < ?", [$radius]);
+            });
+        }
+
+        // // Radius filter based on user's saved address if provided
+        if ($user->addresses->isNotEmpty() && $request->filled('radius')) {
             $address = $user->addresses->first();
 
             if ($address->latitude && $address->longitude) {
-                $query->whereHas('addresses', function ($q) use ($address, $request) {
-                    $latitude  = $address->latitude;
-                    $longitude = $address->longitude;
-                    $radius    = $request->radius;
+                $userLat  = $address->latitude;
+                $userLong = $address->longitude;
+                $radius   = $request->radius;
 
-                    $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+                $query->whereHas('addresses', function ($q) use ($userLat, $userLong, $radius) {
+                    $haversine = "(6371 * acos(
+                    cos(radians(?)) * cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) * sin(radians(latitude))
+                ))";
 
                     $q->select('*')
-                        ->selectRaw("$haversine AS distance", [$latitude, $longitude, $latitude])
+                        ->selectRaw("$haversine AS distance", [$userLat, $userLong, $userLat])
                         ->having('distance', '<', $radius);
                 });
             }
         }
 
-        if ($request->has('category_id')) {
+        // Category filter
+        if ($request->filled('category_id')) {
             $query->whereHas('craftsperson', function ($q) use ($request) {
                 $q->where('category_id', $request->category_id);
             });
         }
 
-        if ($request->search) {
+        // Search filter
+        if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
                     ->orWhereHas('craftsperson.category', function ($q2) use ($request) {
@@ -53,23 +81,20 @@ class GetCraftspersonController extends Controller
                     });
             });
         }
-        if ($request->has('avg_review')) {
+
+        // Avg review filter
+        if ($request->filled('avg_review')) {
             $avgReview = floatval($request->avg_review);
-            $query->withAvg('giver_reviews', 'rating')
-                ->having('giver_reviews_avg_rating', $avgReview);
+            $query->having('giver_reviews_avg_rating', '>=', $avgReview);
         }
 
-        if ($request->has('price_range')) {
-            $priceRange = $request->price_range; // Example: [20, 45]
+        // Price range filter
+        if ($request->filled('price_range') && is_array($request->price_range)) {
+            [$minPrice, $maxPrice] = $request->price_range;
 
-            if (is_array($priceRange) && count($priceRange) === 2) {
-                $minPrice = floatval($priceRange[0]);
-                $maxPrice = floatval($priceRange[1]);
-
-                $query->whereHas('craftsperson', function ($q) use ($minPrice, $maxPrice) {
-                    $q->whereBetween('price', [$minPrice, $maxPrice]);
-                });
-            }
+            $query->whereHas('craftsperson', function ($q) use ($minPrice, $maxPrice) {
+                $q->whereBetween('price', [floatval($minPrice), floatval($maxPrice)]);
+            });
         }
 
         $data = $query->get();
@@ -79,7 +104,7 @@ class GetCraftspersonController extends Controller
             return $item;
         });
 
-        if (! $data) {
+        if ($data->isEmpty()) {
             return $this->error([], 'Craftsperson Not Found', 404);
         }
 

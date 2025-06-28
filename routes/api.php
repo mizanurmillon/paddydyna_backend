@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
+use App\Http\Controllers\Api\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -211,4 +212,13 @@ Route::controller(CategoryController::class)->group(function () {
 Route::controller(ConnectAccount::class)->prefix('instructor')->group(function () {
     Route::get('/connect/success', 'success')->name('connect.success');
     Route::get('/connect/cancel', 'cancel')->name('connect.cancel');
+});
+
+Route::controller(BookingController::class)->group(function () {
+    Route::get('/checkout-success', 'checkoutSuccess')->name('checkout.success');
+    Route::get('/checkout-cancel', 'checkoutCancel')->name('checkout.cancel');
+});
+
+Route::controller(SettingController::class)->group(function () {
+    Route::get('/get-setting', 'getSetting');
 });

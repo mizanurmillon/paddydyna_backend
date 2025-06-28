@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('title')->nullable();
             $table->string('email')->nullable();
             $table->string('system_name')->nullable();
+            $table->double('platform_fee')->nullable();
             $table->string('copyright_text')->nullable();
             $table->string('logo')->nullable();
             $table->string('favicon')->nullable();

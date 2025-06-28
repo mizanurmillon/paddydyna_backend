@@ -31,6 +31,7 @@ class SystemSettingController extends Controller {
      */
     public function update(Request $request) {
         $validator = Validator::make($request->all(), [
+            'platform_fee'   => 'nullable|numeric',
             'title'          => 'nullable|string',
             'email'          => 'required|email',
             'system_name'    => 'nullable|string',
@@ -46,6 +47,7 @@ class SystemSettingController extends Controller {
         $data = SystemSetting::first();
         try {
             $setting                 = SystemSetting::firstOrNew();
+            $setting->platform_fee   = $request->platform_fee;
             $setting->title          = $request->title;
             $setting->email          = $request->email;
             $setting->system_name    = $request->system_name;

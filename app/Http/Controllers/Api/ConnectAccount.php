@@ -46,7 +46,7 @@ class ConnectAccount extends Controller
 
         // return $account;
 
-        if ($user->status == 'Enabled') {
+        if ($user->stripe_account_status == 'Enabled') {
             return $this->error([], 'Your account is already connected.', 200);
         }
         if ($account && $account->payouts_enabled == true) {
@@ -75,13 +75,13 @@ class ConnectAccount extends Controller
 
         if (!$account->details_submitted || !$account->payouts_enabled) {
             $user->update([
-                'status' => 'Rejected'
+                'stripe_account_status' => 'Rejected'
             ]);
             return redirect()->away($request->get('cancel_redirect_url'));
         }
 
         $user->update([
-            'status' => 'Enabled'
+            'stripe_account_status' => 'Enabled'
         ]);
 
         return redirect($request->get('success_redirect_url'));

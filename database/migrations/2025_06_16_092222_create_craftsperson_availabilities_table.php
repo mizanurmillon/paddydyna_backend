@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('craftspeople_id');
             $table->foreign('craftspeople_id')->references('id')->on('craftspeople')->onDelete('cascade');
             $table->string('day')->nullable();
-            $table->string('start_time')->nullable();
-            $table->string('end_time')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->timestamps();
         });
     }
