@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
+use App\Http\Controllers\Api\HomePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -237,4 +238,8 @@ Route::controller(FaqController::class)->group(function () {
 Route::controller(BlogController::class)->group(function () {
     Route::get('/get-blogs', 'getBlogs');
     Route::get('/get-blogs/{slug}', 'getBlog');
+});
+
+Route::controller(HomePageController::class)->group(function () {
+    Route::get('/get-home-page', 'getHomePage');
 });

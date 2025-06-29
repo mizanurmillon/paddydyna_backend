@@ -156,6 +156,15 @@
                                 <span class="menu-title">About Section</span>
                             </a>
                         </div>
+                        <div class="menu-item">
+                            <a href="{{ route('admin.platform_overview.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.platform_overview.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Platform Overview</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 

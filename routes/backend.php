@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\CraftspersonController;
 use App\Http\Controllers\Web\Backend\CMS\HeroSectionController;
 use App\Http\Controllers\Web\Backend\CMS\AboutSectionController;
+use App\Http\Controllers\Web\Backend\CMS\PlatformOverviewController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -59,6 +60,9 @@ Route::controller(HeroSectionController::class)->group(function () {
     Route::post('/cms/hero-section/update', 'update')->name('admin.hero_section.update');
 });
 
+/**
+ * CMS
+ * Section About */
 Route::controller(AboutSectionController::class)->group(function () {
     Route::get('/cms/about-section', 'index')->name('admin.about_section.index');
     Route::post('/cms/about-section/update', 'update')->name('admin.about_section.update');
@@ -69,4 +73,13 @@ Route::controller(AboutSectionController::class)->group(function () {
     Route::post('/cms/about-section/item/update/{id}', 'itemUpdate')->name('admin.about_section.item.update');
     Route::post('/cms/about-section/item/status/{id}', 'status')->name('admin.about_section.item.status');
     Route::delete('/cms/about-section/item/destroy/{id}', 'destroy')->name('admin.about_section.item.destroy');
+});
+
+/**
+ * CMS
+ * Section Platform Overview
+ */
+Route::controller(PlatformOverviewController::class)->group(function () {
+    Route::get('/cms/platform-overview', 'index')->name('admin.platform_overview.index');
+    Route::post('/cms/platform-overview/update', 'update')->name('admin.platform_overview.update');
 });
