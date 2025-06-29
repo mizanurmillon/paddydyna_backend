@@ -1,10 +1,10 @@
-<div id="kt_aside" class="aside aside-default  aside-hoverable " data-kt-drawer="true" data-kt-drawer-name="aside"
+<div id="kt_aside" class="aside aside-default aside-hoverable " data-kt-drawer="true" data-kt-drawer-name="aside"
     data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
     data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start"
     data-kt-drawer-toggle="#kt_aside_toggle">
 
     <!--begin::Brand-->
-    <div class="aside-logo flex-column-auto px-10 pt-9 pb-5" id="kt_aside_logo">
+    <div class="px-10 pb-5 aside-logo flex-column-auto pt-9" id="kt_aside_logo">
         <!--begin::Logo-->
         <a href="{{ route('admin.dashboard') }}" style="display: block; width: 150px; height: auto;">
             <img alt="Logo" src="{{ asset($systemSetting->logo ?? 'backend/media/logos/logo-default.svg') }}"
@@ -21,10 +21,10 @@
         <!--begin::Aside Menu-->
 
         <!--begin::Menu-->
-        <div class="menu menu-sub-indention menu-column menu-rounded menu-title-gray-600 menu-icon-gray-400 menu-active-bg menu-state-primary menu-arrow-gray-500 fw-semibold fs-6 my-5 mt-lg-2 mb-lg-0"
+        <div class="my-5 menu menu-sub-indention menu-column menu-rounded menu-title-gray-600 menu-icon-gray-400 menu-active-bg menu-state-primary menu-arrow-gray-500 fw-semibold fs-6 mt-lg-2 mb-lg-0"
             id="kt_aside_menu" data-kt-menu="true">
 
-            <div class="hover-scroll-y mx-4" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+            <div class="mx-4 hover-scroll-y" id="kt_aside_menu_wrapper" data-kt-scroll="true"
                 data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
                 data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="20px"
                 data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer">
@@ -46,7 +46,7 @@
 
                 <div class="menu-item">
                     <div class="menu-content">
-                        <div class="separator mx-1 my-2"></div>
+                        <div class="mx-1 my-2 separator"></div>
                     </div>
                 </div>
                 <div class="menu-item">
@@ -69,7 +69,7 @@
                         <span class="menu-title">Craftsperson User</span>
                     </a>
                 </div>
-                
+
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
                         href="{{ route('admin.categories.index') }}">
@@ -86,10 +86,10 @@
                 </div>
                 <div class="menu-item">
                     <div class="menu-content">
-                        <div class="separator mx-1 my-2"></div>
+                        <div class="mx-1 my-2 separator"></div>
                     </div>
                 </div>
-                <h2>Website</h2>
+                <h4 class="text-uppercase ms-2">Website</h4>
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"
                         href="{{ route('admin.blogs.index') }}">
@@ -129,7 +129,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['admin.hero_section.*','admin.about_section.*']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['admin.hero_section.*','admin.about_section.*','admin.our_mission.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -154,6 +154,15 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">About Section</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="{{ route('admin.our_mission.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.our_mission.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Our Mission</span>
                             </a>
                         </div>
                     </div>
