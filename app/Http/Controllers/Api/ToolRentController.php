@@ -17,7 +17,7 @@ class ToolRentController extends Controller
     {
         $user = auth()->user();
 
-        $query = ToolBooking::with('user:id,name,avatar')
+        $query = ToolBooking::with(['user:id,name,avatar','address'])
         ->whereHas('tool', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         });

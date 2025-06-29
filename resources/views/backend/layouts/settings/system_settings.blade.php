@@ -53,37 +53,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-4">
-                                    <div class="input-style-1">
-                                        <label for="title">Title:</label>
-                                        <input type="text" placeholder="Enter Title" id="title"
-                                            class="form-control @error('title') is-invalid @enderror" name="title"
-                                            value="{{ $setting->title ?? '' }}" />
-                                        @error('title')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12 mt-4">
-                                    <div class="input-style-1">
-                                        <label for="email">Email:</label>
-                                        <input type="email" placeholder="Enter Email" id="email"
-                                            class="form-control @error('email') is-invalid @enderror" name="email"
-                                            value="{{ $setting->email ?? '' }}" />
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mt-4">
+                               <div class="col-md-6 mt-4">
                                     <div class="input-style-1">
                                         <label for="system_name">System Name:</label>
                                         <input type="text" placeholder="System Name" id="system_name"
@@ -97,7 +67,40 @@
                                     </div>
                                 </div>
 
+                               
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6 mt-4">
+                                    <div class="input-style-1">
+                                        <label for="email">Email:</label>
+                                        <input type="email" placeholder="Enter Email" id="email"
+                                            class="form-control @error('email') is-invalid @enderror" name="email"
+                                            value="{{ $setting->email ?? '' }}" />
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                 <div class="col-md-6 mt-4">
+                                    <div class="input-style-1">
+                                        <label for="address">Address:</label>
+                                        <input type="text" placeholder="Enter Address" id="address"
+                                            class="form-control @error('address') is-invalid @enderror" name="address"
+                                            value="{{ $setting->address ?? '' }}" />
+                                        @error('address')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                 <div class="col-md-12 mt-4">
                                     <div class="input-style-1">
                                         <label for="copyright_text">Copy Rights Text:</label>
                                         <input type="text" placeholder="Copy Rights Text" id="copyright_text"
@@ -143,7 +146,20 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 mt-4">
+                                 <div class="col-md-6 mt-4">
+                                    <div class="input-style-1">
+                                        <label for="footer_logo">Footer Logo:</label>
+                                        <input type="file" class="dropify @error('footer_logo') is-invalid @enderror" name="footer_logo"
+                                            id="footer_logo"
+                                            data-default-file="@isset($setting){{ asset($setting->footer_logo) }}@endisset" />
+                                    </div>
+                                    @error('footer_logo')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-6 mt-4">
                                     <div class="input-style-1">
                                         <label for="description">About System:</label>
                                         <textarea placeholder="Type here..." id="description" name="description"

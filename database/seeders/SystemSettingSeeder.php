@@ -16,14 +16,15 @@ class SystemSettingSeeder extends Seeder
         SystemSetting::insert([
             [
                 'id'             => 1,
-                'title'          => 'The Title',
-                'email'          => 'support@gmail.com',
-                'system_name'    => 'Laravel Stater Kit',
+                'email'          => 'info@nixerly.com',
+                'system_name'    => 'Nixerly',
                 'platform_fee'   => 10,
                 'copyright_text' => 'Copyright © 2017 - 2024 DESIGN AND DEVELOPED BY ❤️',
-                'logo'           => null,
-                'favicon'        => null,
-                'description'    => 'The Description',
+                'address'        => 'Dublin, Ireland',
+                'logo'           => 'backend/images/logo.png',
+                'footer_logo'    => 'backend/images/footer_logo.png',
+                'favicon'        => 'backend/images/logo.png',
+                'description'    => 'Nixerly connects verified construction professionals with quality businesses in Ireland, creating a valuable network for the construction industry.',
                 'created_at'     => Carbon::now(),
             ],
         ]);

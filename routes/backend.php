@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\FaqController;
+use App\Http\Controllers\Web\Backend\BlogController;
 use App\Http\Controllers\Web\Backend\CategoryController;
+use App\Http\Controllers\Web\Backend\CMS\HeroSectionController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\CraftspersonController;
 
@@ -34,4 +36,26 @@ Route::controller(FaqController::class)->group(function () {
     Route::post('/faqs/update/{id}', 'update')->name('admin.faqs.update');
     Route::post('/faqs/status/{id}', 'status')->name('admin.faqs.status');
     Route::post('/faqs/destroy/{id}', 'destroy')->name('admin.faqs.destroy');
+});
+
+//blog routes
+Route::controller(BlogController::class)->group(function () {
+    Route::get('/blogs', 'index')->name('admin.blogs.index');
+    Route::get('/blogs/create', 'create')->name('admin.blogs.create');
+    Route::post('/blogs/store', 'store')->name('admin.blogs.store');
+    Route::get('/blogs/edit/{id}', 'edit')->name('admin.blogs.edit');
+    Route::post('/blogs/update/{id}', 'update')->name('admin.blogs.update');
+    Route::post('/blogs/status/{id}', 'status')->name('admin.blogs.status');
+    Route::delete('/blogs/destroy/{id}', 'destroy')->name('admin.blogs.destroy');
+});
+
+
+/**
+ * CMS
+ * Page Home
+ * Hero Section
+ */
+Route::controller(HeroSectionController::class)->group(function () {
+    Route::get('/cms/hero-section', 'index')->name('admin.hero_section.index');
+    Route::post('/cms/hero-section/update', 'update')->name('admin.hero_section.update');
 });

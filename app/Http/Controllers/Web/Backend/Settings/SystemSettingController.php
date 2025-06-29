@@ -32,11 +32,12 @@ class SystemSettingController extends Controller {
     public function update(Request $request) {
         $validator = Validator::make($request->all(), [
             'platform_fee'   => 'nullable|numeric',
-            'title'          => 'nullable|string',
+            'address'          => 'nullable|string',
             'email'          => 'required|email',
             'system_name'    => 'nullable|string',
             'copyright_text' => 'nullable|string',
             'logo'           => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
+            'footer_logo'    => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
             'favicon'        => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
             'description'    => 'nullable|string',
         ]);
@@ -48,14 +49,16 @@ class SystemSettingController extends Controller {
         try {
             $setting                 = SystemSetting::firstOrNew();
             $setting->platform_fee   = $request->platform_fee;
-            $setting->title          = $request->title;
+            $setting->address          = $request->address;
             $setting->email          = $request->email;
             $setting->system_name    = $request->system_name;
             $setting->copyright_text = $request->copyright_text;
             $setting->logo           = $request->logo;
+            $setting->footer_logo    = $request->footer_logo;
             $setting->favicon        = $request->favicon;
             $setting->description    = $request->description;
 
+            // upload logo
             if ($request->hasFile('logo')) {
                 $setting->logo = uploadImage($request->file('logo'), 'logos');
 
@@ -69,6 +72,21 @@ class SystemSettingController extends Controller {
                 $setting->logo = $data->logo;
             }
 
+            // upload footer logo
+            if ($request->hasFile('footer_logo')) {
+                $setting->footer_logo = uploadImage($request->file('footer_logo'), 'logos');
+
+                if ($data->footer_logo) {
+                    $previousImagePath = public_path($data->footer_logo);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+            }else {
+                $setting->footer_logo = $data->footer_logo;
+            }
+
+            //
             if ($request->hasFile('favicon')) {
                 $setting->favicon = uploadImage($request->file('favicon'), 'favicons');
 

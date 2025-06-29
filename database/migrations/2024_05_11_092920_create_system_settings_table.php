@@ -11,12 +11,13 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->string('email')->nullable();
             $table->string('system_name')->nullable();
+            $table->string('email')->nullable();
             $table->double('platform_fee')->nullable();
             $table->string('copyright_text')->nullable();
+            $table->text('address')->nullable();
             $table->string('logo')->nullable();
+            $table->string('footer_logo')->nullable();
             $table->string('favicon')->nullable();
             $table->longText('description')->nullable();
             $table->timestamps();

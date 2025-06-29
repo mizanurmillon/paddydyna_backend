@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ConnectAccount;
 use App\Http\Controllers\Api\ToolController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\GetToolController;
+use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ToolRentController;
 use App\Http\Controllers\Api\MyBookingController;
@@ -15,13 +18,13 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\JobRequestController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\ToolReviewController;
+use App\Http\Controllers\Api\SocialMediaController;
 use App\Http\Controllers\Api\ToolBookingController;
 use App\Http\Controllers\Api\Auth\AddressController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
-use App\Http\Controllers\Api\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -221,4 +224,17 @@ Route::controller(BookingController::class)->group(function () {
 
 Route::controller(SettingController::class)->group(function () {
     Route::get('/get-setting', 'getSetting');
+});
+
+Route::controller(SocialMediaController::class)->group(function () {
+    Route::get('/get-social-media', 'getSocialMedia');
+});
+
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/get-faq', 'getFaq');
+});
+
+Route::controller(BlogController::class)->group(function () {
+    Route::get('/get-blogs', 'getBlogs');
+    Route::get('/get-blogs/{slug}', 'getBlog');
 });

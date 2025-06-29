@@ -6,13 +6,11 @@
     <!--begin::Brand-->
     <div class="aside-logo flex-column-auto px-10 pt-9 pb-5" id="kt_aside_logo">
         <!--begin::Logo-->
-        <a href="{{ route('admin.dashboard') }}">
+        <a href="{{ route('admin.dashboard') }}" style="display: block; width: 150px; height: auto;">
             <img alt="Logo" src="{{ asset($systemSetting->logo ?? 'backend/media/logos/logo-default.svg') }}"
-                class="max-h-50px logo-default theme-light-show" />
-            {{-- <img alt="Logo" src="{{ asset($systemSetting->logo ?? 'backend/media/logos/logo-default.svg') }}"
-                class="max-h-50px logo-default theme-dark-show" /> --}}
+                class="max-h-50px logo-default theme-light-show" style="width: 100%; height: auto;" />
             <img alt="Logo" src="{{ asset($systemSetting->logo ?? 'backend/media/logos/logo-default.svg') }}"
-                class="max-h-50px logo-minimize" />
+                class="max-h-50px logo-minimize" style="width: 100%; height: auto;" />
         </a>
         <!--end::Logo-->
     </div>
@@ -55,7 +53,17 @@
                     <a class="menu-link {{ request()->routeIs('admin.craftsperson.*') ? 'active' : '' }}"
                         href="{{ route('admin.craftsperson.index') }}">
                         <span class="menu-icon">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-6 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM19 15H9v-.25C9 12.901 11.254 11 14 11s5 1.901 5 3.75V15z"></path><path d="M4 8H2v12c0 1.103.897 2 2 2h12v-2H4V8z"></path></svg>
+
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                            </svg>
+
 
                         </span>
                         <span class="menu-title">Craftsperson User</span>
@@ -79,6 +87,26 @@
                 </div>
 
                 <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"
+                        href="{{ route('admin.blogs.index') }}">
+                        <span class="menu-icon">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                <path d="M7 8h10" />
+                                <path d="M7 12h10" />
+                                <path d="M7 16h10" />
+                            </svg>
+
+                        </span>
+                        <span class="menu-title">Blogs</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}"
                         href="{{ route('admin.faqs.index') }}">
                         <span class="menu-icon">
@@ -96,27 +124,27 @@
                     </a>
                 </div>
 
-                {{-- <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['faq.*', 'dynamic_page.*']) ? 'active show' : '' }} menu-accordion">
+                <div data-kt-menu-trigger="click"
+                    class="menu-item {{ request()->routeIs(['admin.hero_section.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
                         </span>
-                        <span class="menu-title">Pages</span>
+                        <span class="menu-title">CMS</span>
                         <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
-                            <a href="{{ route('dynamic_page.index') }}"
-                                class="menu-link {{ request()->routeIs(['dynamic_page.index', 'dynamic_page.create', 'dynamic_page.update']) ? 'active show' : '' }}">
+                            <a href="{{ route('admin.hero_section.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.hero_section.*']) ? 'active show' : '' }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Dynamic Page</span>
+                                <span class="menu-title">Hero Section</span>
                             </a>
                         </div>
                     </div>
-                </div> --}}
+                </div>
 
                 <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['profile.setting', 'system.index', 'mail.setting', 'social.index']) ? 'active show' : '' }} menu-accordion">
@@ -155,7 +183,7 @@
                                 <span class="menu-title">Mail Setting</span>
                             </a>
                         </div>
-                        {{-- <div class="menu-item">
+                        <div class="menu-item">
                             <a href="{{ route('social.index') }}"
                                 class="menu-link {{ request()->routeIs('social.index') ? 'active' : '' }}">
                                 <span class="menu-bullet">
@@ -163,7 +191,7 @@
                                 </span>
                                 <span class="menu-title">Social Media</span>
                             </a>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
