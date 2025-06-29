@@ -69,8 +69,7 @@
                         <span class="menu-title">Craftsperson User</span>
                     </a>
                 </div>
-
-
+                
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
                         href="{{ route('admin.categories.index') }}">
@@ -85,7 +84,12 @@
                         <span class="menu-title">Categories</span>
                     </a>
                 </div>
-
+                <div class="menu-item">
+                    <div class="menu-content">
+                        <div class="separator mx-1 my-2"></div>
+                    </div>
+                </div>
+                <h2>Website</h2>
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"
                         href="{{ route('admin.blogs.index') }}">
@@ -125,7 +129,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['admin.hero_section.*']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['admin.hero_section.*','admin.about_section.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -141,6 +145,15 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">Hero Section</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="{{ route('admin.about_section.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.about_section.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">About Section</span>
                             </a>
                         </div>
                     </div>

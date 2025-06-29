@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\BlogController;
 use App\Http\Controllers\Web\Backend\CategoryController;
-use App\Http\Controllers\Web\Backend\CMS\HeroSectionController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\CraftspersonController;
+use App\Http\Controllers\Web\Backend\CMS\HeroSectionController;
+use App\Http\Controllers\Web\Backend\CMS\AboutSectionController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -25,7 +26,6 @@ Route::controller(CraftspersonController::class)->group(function () {
     Route::post('/craftsperson/{id}/status', 'status')->name('admin.craftsperson.status');
     Route::get('/craftsperson/{id}/show', 'show')->name('admin.craftsperson.show');
 });
-
 
 //FAQ Routes
 Route::controller(FaqController::class)->group(function () {
@@ -49,7 +49,6 @@ Route::controller(BlogController::class)->group(function () {
     Route::delete('/blogs/destroy/{id}', 'destroy')->name('admin.blogs.destroy');
 });
 
-
 /**
  * CMS
  * Page Home
@@ -58,4 +57,16 @@ Route::controller(BlogController::class)->group(function () {
 Route::controller(HeroSectionController::class)->group(function () {
     Route::get('/cms/hero-section', 'index')->name('admin.hero_section.index');
     Route::post('/cms/hero-section/update', 'update')->name('admin.hero_section.update');
+});
+
+Route::controller(AboutSectionController::class)->group(function () {
+    Route::get('/cms/about-section', 'index')->name('admin.about_section.index');
+    Route::post('/cms/about-section/update', 'update')->name('admin.about_section.update');
+
+    Route::get('/cms/about-section/item/create', 'create')->name('admin.about_section.item.create');
+    Route::post('/cms/about-section/item/store', 'store')->name('admin.about_section.item.store');
+    Route::get('/cms/about-section/item/edit/{id}', 'edit')->name('admin.about_section.item.edit');
+    Route::post('/cms/about-section/item/update/{id}', 'itemUpdate')->name('admin.about_section.item.update');
+    Route::post('/cms/about-section/item/status/{id}', 'status')->name('admin.about_section.item.status');
+    Route::delete('/cms/about-section/item/destroy/{id}', 'destroy')->name('admin.about_section.item.destroy');
 });

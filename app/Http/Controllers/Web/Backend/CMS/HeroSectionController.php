@@ -36,6 +36,14 @@ class HeroSectionController extends Controller
         }else{
             $imageName = $hero_section->image_url;
         }
+
+        $hero_section->title = $request->title;
+        $hero_section->sub_title = $request->sub_title;
+        $hero_section->launching_date = $request->launching_date;
+        $hero_section->description = $request->description;
+        $hero_section->image_url = $imageName;
+        $hero_section->save();
+        return redirect()->route('admin.hero_section.index')->with('t-success', 'Hero Section Updated Successfully');
        
     }
 }
