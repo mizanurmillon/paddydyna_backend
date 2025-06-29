@@ -66,10 +66,17 @@ class ChatController extends Controller
             return $this->error([], 'No messages found', 404);
         }
 
-        $response = [
-            'user'     => $receiverUser,
-            'messages' => $messages
-        ];
+        if ($messages->isEmpty()) {
+            $response = [
+                'user'     => $receiverUser,
+                'messages' => []
+            ];
+        } else {
+            $response = [
+                'user'     => $receiverUser,
+                'messages' => $messages
+            ];
+        }
 
         return $this->success($response, 'Messages fetched successfully.', 200);
     }
