@@ -53,6 +53,17 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
+                                <label for="sub_title" class="form-label">Sub Title </label>
+                                <input type="text" placeholder="Enter sub title" id="sub_title"
+                                    class="form-control @error('sub_title') is-invalid @enderror" name="sub_title"
+                                    value="{{ $about_section->sub_title ?? old('sub_title') }}" />
+                                @error('sub_title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
                                     placeholder="Enter Description" value="{{ old('description') }}" rows="5">{{  $about_section->description ?? '' }}</textarea>
@@ -195,7 +206,7 @@
         }
         // Status Change
         function statusChange(id) {
-            let url = "{{ route('admin.categories.status', ':id') }}";
+            let url = "{{ route('admin.about_section.item.status', ':id') }}";
             $.ajax({
                 type: "POST",
                 url: url.replace(':id', id),
@@ -237,7 +248,7 @@
         }
         // Delete Button
         function deleteItem(id) {
-            let url = "{{ route('admin.categories.destroy', ':id') }}";
+            let url = "{{ route('admin.about_section.item.destroy', ':id') }}";
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",
