@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'About Section')
+@section('title', 'Platform Overview Section')
 
 @section('content')
     <!--begin::Toolbar-->
@@ -21,7 +21,7 @@
                             Home </a>
                     </li>
 
-                    <li class="breadcrumb-item text-muted"> About Section </li>
+                    <li class="breadcrumb-item text-muted"> Platform Overview Section </li>
 
                 </ul>
                 <!--end::Breadcrumb-->
@@ -37,15 +37,15 @@
                 <div class="card p-5">
                     <div class="card-style mb-30">
                         <div class="d-flex mb-3">
-                            <h2>About Section Content</h2>
+                            <h2>Platform Overview Content</h2>
                         </div>
-                        <form action="{{ route('admin.about_section.update') }}" method="POST">
+                        <form action="{{ route('admin.platform_overview.update') }}" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title </label>
                                 <input type="text" placeholder="Enter title" id="title"
                                     class="form-control @error('title') is-invalid @enderror" name="title"
-                                    value="{{ $about_section->title ?? old('title') }}" />
+                                    value="{{ $platform_overview->title ?? old('title') }}" />
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -56,7 +56,7 @@
                                 <label for="sub_title" class="form-label">Sub Title </label>
                                 <input type="text" placeholder="Enter sub title" id="sub_title"
                                     class="form-control @error('sub_title') is-invalid @enderror" name="sub_title"
-                                    value="{{ $about_section->sub_title ?? old('sub_title') }}" />
+                                    value="{{ $platform_overview->sub_title ?? old('sub_title') }}" />
                                 @error('sub_title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -66,7 +66,7 @@
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                    placeholder="Enter Description" value="{{ old('description') }}" rows="5">{{  $about_section->description ?? '' }}</textarea>
+                                    placeholder="Enter Description" value="{{ old('description') }}" rows="5">{{  $platform_overview->description ?? '' }}</textarea>
                                 @error('sub_title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -81,17 +81,16 @@
             <div class="col-lg-8">
                 <div class="card p-5">
                     <div class="card-style mb-30">
-                        <h2>About Section Item</h2>
+                        <h2>Platform Overview Slider Image</h2>
                         <div class="d-flex justify-content-end mb-3">
-                            <a href="{{ route('admin.about_section.item.create') }}" class="btn btn-primary">Add New</a>
+                            <a href="{{ route('admin.platform_overview.slider.create') }}" class="btn btn-primary">Add New Image</a>
                         </div>
                         <div class="table-wrapper table-responsive">
                             <table id="data-table" class="table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Title</th>
-                                        <th>Sub Title</th>
+                                        <th>Image</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -143,7 +142,7 @@
                     pagingType: "full_numbers",
                     dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'l><'col-md-2 col-sm-4 px-0'f>>tipr",
                     ajax: {
-                        url: "{{ route('admin.about_section.index') }}",
+                        url: "{{ route('admin.platform_overview.index') }}",
                         type: "get",
                     },
 
@@ -154,14 +153,8 @@
                             searchable: false
                         },
                         {
-                            data: 'title',
-                            name: 'title',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'sub_title',
-                            name: 'sub_title',
+                            data: 'image',
+                            name: 'image',
                             orderable: false,
                             searchable: false
                         },
@@ -206,7 +199,7 @@
         }
         // Status Change
         function statusChange(id) {
-            let url = "{{ route('admin.about_section.item.status', ':id') }}";
+            let url = "{{ route('admin.platform_overview.slider.status', ':id') }}";
             $.ajax({
                 type: "POST",
                 url: url.replace(':id', id),
@@ -248,7 +241,7 @@
         }
         // Delete Button
         function deleteItem(id) {
-            let url = "{{ route('admin.about_section.item.destroy', ':id') }}";
+            let url = "{{ route('admin.platform_overview.slider.destroy', ':id') }}";
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

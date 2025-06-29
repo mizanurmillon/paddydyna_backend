@@ -7,6 +7,7 @@ use App\Models\Cms;
 use App\Enum\PageSection;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
 class AboutSectionController extends Controller
@@ -54,12 +55,14 @@ class AboutSectionController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'sub_title' => 'required|string|max:255',
             'description' => 'required|string|max:5000',
         ]);
 
         $about_section = Cms::where('page_name', Page::HOME->value)->where('section_name', PageSection::ABOUT_SECTION->value)->first();
 
         $about_section->title = $request->title;
+        $about_section->sub_title = $request->sub_title;
         $about_section->description = $request->description;
         $about_section->save();
         return redirect()->route('admin.about_section.index')->with('t-success', 'About Section updated successfully');
@@ -104,5 +107,54 @@ class AboutSectionController extends Controller
         $about_section_info->sub_title = $request->sub_title;
         $about_section_info->save();
         return redirect()->route('admin.about_section.index')->with('t-success', 'About Section updated successfully');
+    }
+
+     /**
+     * Change the status of the specified dynamic page.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function status(int $id): JsonResponse {
+
+        $data = Cms::findOrFail($id);
+
+        if ($data->status == 'active') {
+            $data->status = 'inactive';
+            $data->save();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unpublished Successfully.',
+                'data'    => $data,
+            ]);
+        } else {
+            $data->status = 'active';
+            $data->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Published Successfully.',
+                'data'    => $data,
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified dynamic page from the database.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse {
+
+        $data = Cms::findOrFail($id);
+
+        $data->delete();
+
+        return response()->json([
+            't-success' => true,
+            'message'   => 'Deleted successfully.',
+        ]);
     }
 }

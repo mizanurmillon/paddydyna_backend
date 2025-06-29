@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
+use App\Http\Controllers\Api\HomePageController;
 
 /*
 |--------------------------------------------------------------------------
