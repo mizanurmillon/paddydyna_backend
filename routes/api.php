@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\FaqController;
-use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ConnectAccount;
 use App\Http\Controllers\Api\ToolController;
@@ -10,7 +8,6 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\GetToolController;
-use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ToolRentController;
 use App\Http\Controllers\Api\MyBookingController;
@@ -18,7 +15,6 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\JobRequestController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\ToolReviewController;
-use App\Http\Controllers\Api\SocialMediaController;
 use App\Http\Controllers\Api\ToolBookingController;
 use App\Http\Controllers\Api\Auth\AddressController;
 use App\Http\Controllers\Api\NotificationController;
@@ -72,7 +68,7 @@ Route::controller(LoginController::class)->prefix('users/login')->group(function
     Route::post('/reset-password', 'resetPassword');
 });
 
-Route::group(['middleware' => ['jwt.verify']], function() {
+Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::controller(UserController::class)->prefix('users')->group(function () {
         Route::get('/data', 'userData');
@@ -113,12 +109,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::controller(NotificationController::class)->group(function () {
         Route::get('/notification', 'getNotification');
     });
-    
+
 
     /**
      * Customer Middleware
      */
-    Route::group(['middleware' => ['customer']], function() {
+    Route::group(['middleware' => ['customer']], function () {
 
         Route::controller(GetCraftspersonController::class)->group(function () {
             Route::get('/get-craftsperson', 'getCraftsperson');
@@ -141,7 +137,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
             Route::get('/completed-booking/{id}', 'completedBooking');
         });
 
-        /** 
+        /**
          * My Booking API
          */
 
@@ -161,13 +157,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         Route::controller(ToolReviewController::class)->group(function () {
             Route::post('/add-tool-review/{id}', 'addToolReview');
         });
-
     });
 
     /**
      * Craftsperson Middleware
      */
-    Route::group(['middleware' => ['craftsperson']], function() {
+    Route::group(['middleware' => ['craftsperson']], function () {
 
         Route::controller(OnBodingController::class)->group(function () {
             Route::post('/on-boarding', 'onBoarding');
@@ -188,7 +183,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
             Route::get('/rent-request-accept/{id}', 'rentRequestAccept');
             Route::get('/rent-request-cancel/{id}', 'rentRequestCancel');
         });
-
     });
 
     /**
@@ -201,7 +195,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         Route::post('/add-review/{id}', 'addReview');
         Route::get('/get-review', 'getReview');
     });
-
 });
 
 /**
@@ -220,21 +213,4 @@ Route::controller(ConnectAccount::class)->prefix('instructor')->group(function (
 Route::controller(BookingController::class)->group(function () {
     Route::get('/checkout-success', 'checkoutSuccess')->name('checkout.success');
     Route::get('/checkout-cancel', 'checkoutCancel')->name('checkout.cancel');
-});
-
-Route::controller(SettingController::class)->group(function () {
-    Route::get('/get-setting', 'getSetting');
-});
-
-Route::controller(SocialMediaController::class)->group(function () {
-    Route::get('/get-social-media', 'getSocialMedia');
-});
-
-Route::controller(FaqController::class)->group(function () {
-    Route::get('/get-faq', 'getFaq');
-});
-
-Route::controller(BlogController::class)->group(function () {
-    Route::get('/get-blogs', 'getBlogs');
-    Route::get('/get-blogs/{slug}', 'getBlog');
 });
