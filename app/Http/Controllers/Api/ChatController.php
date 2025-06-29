@@ -29,13 +29,25 @@ class ChatController extends Controller
             },
             'lastMessage:id,sender_id,receiver_id,conversation_id,message,is_read,created_at'])
         ->withCount('unreadMessages')
-        ->orderBy('updated_at', 'desc')->get();
+        ->latest()->get();
         return $this->success($latestMessages, 'Conversations fetched successfully.', 200);
     }
 
-    public function getChat($id, Request $request)
+    public function getChat($id)
     {
         $user = auth()->user();
+
+        $receiverUser = User::where('id', $id)->select('id', 'name','role','avatar')->first();
+
+        if (!$receiverUser) {
+            return $this->error([], 'User not found', 200);
+        }
+
+        // Mark messages as read
+        Message::where('sender_id', $id)
+            ->where('receiver_id', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
 
         $messages = Message::with('sender:id,name,avatar', 'receiver:id,name,avatar', 'reactions')->select('id', 'sender_id', 'receiver_id', 'message', 'is_read', 'created_at')->where(function ($query) use ($user, $id) {
             $query->where('sender_id', $user->id)
@@ -45,17 +57,16 @@ class ChatController extends Controller
                 ->where('receiver_id', $user->id);
         })->orderBy('created_at', 'asc')->get();
 
-        // Mark messages as read
-        Message::where('sender_id', $id)
-            ->where('receiver_id', $user->id)
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
-
         if ($messages->isEmpty()) {
             return $this->error([], 'No messages found', 404);
         }
 
-        return $this->success($messages, 'Messages fetched successfully.', 200);
+        $response = [
+            'user'     => $receiverUser,
+            'messages' => $messages
+        ];
+
+        return $this->success($response, 'Messages fetched successfully.', 200);
     }
 
     public function sendMessage(Request $request, $id)
