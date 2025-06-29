@@ -29,7 +29,12 @@ class ChatController extends Controller
             },
             'lastMessage:id,sender_id,receiver_id,conversation_id,message,is_read,created_at'])
         ->withCount('unreadMessages')
-        ->latest()->get();
+        ->get()
+        ->sortByDesc(function ($conversation) {
+            return optional($conversation->lastMessage)->created_at;
+        })
+        ->values();
+
         return $this->success($latestMessages, 'Conversations fetched successfully.', 200);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\CategoryController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\CraftspersonController;
@@ -21,4 +22,16 @@ Route::controller(CraftspersonController::class)->group(function () {
     Route::get('/craftsperson', 'index')->name('admin.craftsperson.index');
     Route::post('/craftsperson/{id}/status', 'status')->name('admin.craftsperson.status');
     Route::get('/craftsperson/{id}/show', 'show')->name('admin.craftsperson.show');
+});
+
+
+//FAQ Routes
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faqs', 'index')->name('admin.faqs.index');
+    Route::get('/faqs/create', 'create')->name('admin.faqs.create');
+    Route::post('/faqs/store', 'store')->name('admin.faqs.store');
+    Route::get('/faqs/edit/{id}', 'edit')->name('admin.faqs.edit');
+    Route::post('/faqs/update/{id}', 'update')->name('admin.faqs.update');
+    Route::post('/faqs/status/{id}', 'status')->name('admin.faqs.status');
+    Route::post('/faqs/destroy/{id}', 'destroy')->name('admin.faqs.destroy');
 });
