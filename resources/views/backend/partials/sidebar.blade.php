@@ -129,7 +129,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['admin.hero_section.*','admin.about_section.*','admin.our_mission.*','admin.platform_overview.*']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['admin.hero_section.*','admin.about_section.*','admin.our_mission.*','admin.platform_overview.*','admin.our_value.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -163,6 +163,15 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">Our Mission</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="{{ route('admin.our_value.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.our_value.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Our Value</span>
                             </a>
                         </div>
                         <div class="menu-item">

@@ -1,19 +1,6 @@
-<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_22580_5685)">
-<rect x="20" y="6" width="56" height="56" rx="28" fill="#004372" shape-rendering="crispEdges"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M48.0005 43.0808C48.0005 43.0808 55.0312 40.9521 55.0312 35.0834C55.0312 29.2148 55.2862 28.7599 54.722 28.191C54.1569 27.6212 48.9224 25.8008 48.0005 25.8008C47.0787 25.8008 41.8433 27.6259 41.2782 28.191C40.7141 28.7552 40.97 29.2138 40.97 35.0834C40.97 40.9531 48.0005 43.0808 48.0005 43.0808Z" stroke="white" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M48 43.0808V25.8008" stroke="white" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<filter id="filter0_d_22580_5685" x="0" y="0" width="96" height="96" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="14"/>
-<feGaussianBlur stdDeviation="10"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0.0470588 0 0 0 0 0.221176 0 0 0 0 0.917647 0 0 0 0.2 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_22580_5685"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_22580_5685" result="shape"/>
-</filter>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21C7.02908 21 3 16.9709 3 12C3 7.02908 7.02908 3 12 3C16.9709 3 21 7.02908 21 12C21 16.9709 16.9709 21 12 21Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.3834 19.0977C17.3834 19.0977 15.2058 13.0954 20.9999 11.9998" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.1128 8.08797C19.1768 8.02278 17.4722 8.303 14.9716 10.101C11.9943 12.2455 11.3103 7.71338 12.256 3.01294" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.5954 20.9999C11.5954 20.9999 12.2084 18.4634 10.4541 17.0915C8.69982 15.7205 7.38922 15.8208 7.17128 14.0772C6.95333 12.3336 9.10555 12.0408 7.53128 9.44585C6.49214 7.73244 5.31874 6.66022 5.36252 5.95093" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
