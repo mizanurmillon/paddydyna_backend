@@ -85,9 +85,10 @@ class BookingController extends Controller
                 'success_url'          => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url'           => route('checkout.cancel') . '?redirect_url=' . $request->get('cancel_redirect_url'),
                 'payment_intent_data'  => [
+                    'capture_method'         => 'manual', // <--- ✅ Payment hold
                     'application_fee_amount' => $applicationFeeAmount,
                     'transfer_data'          => [
-                        'destination' => $craftsperson->stripe_account_id, // Movement owner
+                        'destination' => $craftsperson->stripe_account_id,
                     ],
                 ],
                 'metadata'             => [
@@ -124,9 +125,9 @@ class BookingController extends Controller
 
         DB::beginTransaction();
         try {
-            $sessionId       = $request->query('session_id');
-            $checkoutSession = \Stripe\Checkout\Session::retrieve($sessionId);
-            $metadata        = $checkoutSession->metadata;
+            $sessionId            = $request->query('session_id');
+            $checkoutSession      = \Stripe\Checkout\Session::retrieve($sessionId);
+            $metadata             = $checkoutSession->metadata;
             $success_redirect_url = $metadata->success_redirect_url ?? null;
             $craftsperson_name    = $metadata->craftsperson_name ?? null;
             $user_id              = $metadata->user_id ?? null;
@@ -149,21 +150,21 @@ class BookingController extends Controller
             }
 
             $booking = Booking::create([
-                'user_id'              => $user_id,
-                'craftsperson_id'      => $craftsperson_id,
-                'service_type'         => $service_type,
-                'service_description'  => $service_description,
-                'day'                  => $day,
-                'start_time'           => $start_time,
-                'end_time'             => $end_time,
-                'address_id'           => $address_id,
-                'platform_fee'         => $platformFee,
-                'service_fee'          => $service_fee,
-                'total_amount'         => $amount,
+                'user_id'             => $user_id,
+                'craftsperson_id'     => $craftsperson_id,
+                'service_type'        => $service_type,
+                'service_description' => $service_description,
+                'day'                 => $day,
+                'start_time'          => $start_time,
+                'end_time'            => $end_time,
+                'address_id'          => $address_id,
+                'platform_fee'        => $platformFee,
+                'service_fee'         => $service_fee,
+                'total_amount'        => $amount,
                 'agree_to_terms'      => $agree_to_terms,
             ]);
 
-            if(! $booking) {
+            if (! $booking) {
                 return $this->error([], 'Booking not created.', 200);
             }
 

@@ -1,26 +1,25 @@
 <?php
-
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
 {
 
     use ApiResponse;
-    
+
     public function addAddress(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'address' => 'required|string|max:500',
-            'street' => 'nullable|string|max:225',
+            'address'   => 'required|string|max:500',
+            'street'    => 'nullable|string|max:225',
             'post_code' => 'nullable|string|max:225',
             'apartment' => 'nullable|string|max:225',
-            'type' => 'nullable|in:home,work,other',
+            'type'      => 'nullable|in:home,work,other',
         ]);
 
         if ($validator->fails()) {
@@ -29,22 +28,31 @@ class AddressController extends Controller
 
         $user = auth()->user();
 
-        if(!$user) {
+        if (! $user) {
             return $this->error([], 'User not found', 404);
         }
 
+        $isDefault = true;
+
+        $address = Address::where('user_id', $user->id)->first();
+
+        if ($address) {
+            $isDefault = false;
+        }
+
         $data = Address::create([
-            'user_id' => $user->id,
-            'type' => $request->type,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'street' => $request->street,
-            'post_code' => $request->post_code,
-            'apartment' => $request->apartment
+            'user_id'    => $user->id,
+            'type'       => $request->type,
+            'address'    => $request->address,
+            'latitude'   => $request->latitude,
+            'longitude'  => $request->longitude,
+            'street'     => $request->street,
+            'post_code'  => $request->post_code,
+            'apartment'  => $request->apartment,
+            'is_default' => $isDefault,
         ]);
 
-        if(!$data) {
+        if (! $data) {
             return $this->error([], 'Something went wrong', 500);
         }
 
@@ -54,11 +62,11 @@ class AddressController extends Controller
     public function updateAddress(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'address' => 'required|string|max:500',
-            'street' => 'nullable|string|max:225',
+            'address'   => 'required|string|max:500',
+            'street'    => 'nullable|string|max:225',
             'post_code' => 'nullable|string|max:225',
             'apartment' => 'nullable|string|max:225',
-            'type' => 'required|in:home,work',
+            'type'      => 'required|in:home,work',
         ]);
 
         if ($validator->fails()) {
@@ -67,28 +75,28 @@ class AddressController extends Controller
 
         $user = auth()->user();
 
-        if(!$user) {
+        if (! $user) {
             return $this->error([], 'User not found', 404);
         }
 
         $data = Address::where('id', $id)->first();
 
-        if(!$data) {
+        if (! $data) {
             return $this->error([], 'Address not found', 404);
         }
 
         $data->update([
-            'user_id' => $user->id,
-            'type' => $request->type,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
+            'user_id'   => $user->id,
+            'type'      => $request->type,
+            'address'   => $request->address,
+            'latitude'  => $request->latitude,
             'longitude' => $request->longitude,
-            'street' => $request->street,
+            'street'    => $request->street,
             'post_code' => $request->post_code,
-            'apartment' => $request->apartment
+            'apartment' => $request->apartment,
         ]);
 
-        if(!$data) {
+        if (! $data) {
             return $this->error([], 'Something went wrong', 500);
         }
 
@@ -99,13 +107,13 @@ class AddressController extends Controller
     {
         $user = auth()->user();
 
-        if(!$user) {
+        if (! $user) {
             return $this->error([], 'User not found', 404);
         }
 
         $data = Address::where('id', $id)->first();
 
-        if(!$data) {
+        if (! $data) {
             return $this->error([], 'Address not found', 404);
         }
 
@@ -114,26 +122,32 @@ class AddressController extends Controller
         return $this->success([], 'Address deleted successfully.', 200);
     }
 
-    public function defaultAddress($id)
+    public function defaultAddress(Request $request, $id)
     {
         $user = auth()->user();
 
-        if(!$user) {
+        if (! $user) {
             return $this->error([], 'User not found', 404);
         }
 
-        $data = Address::where('id', $id)->first();
+        $address = Address::where('id', $id)->where('user_id', $user->id)->first();
 
-        if(!$data) {
+        if (! $address) {
             return $this->error([], 'Address not found', 404);
         }
 
-        $data->update([
-            'is_default' => 1
+       
+        if ($request->is_default) {
+            
+            Address::where('user_id', $user->id)->update(['is_default' => false]);
+        }
+
+       
+        $address->update([
+            'is_default' => $request->is_default,
         ]);
 
-        return $this->success($data, 'Set default address successfully.', 200);
+        return $this->success($address, 'Set default address successfully.', 200);
     }
 
-    
 }

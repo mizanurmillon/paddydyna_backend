@@ -11,4 +11,5 @@ enum PageSection: string
     case OUR_VALUE = "our_value";
     case PLATFORM_OVERVIEW = "platform_overview";
     case PLATFORM_OVERVIEW_SLIDER = "platform_overview_slider";
+    case FAQ_SECTION = "faq";
 }
