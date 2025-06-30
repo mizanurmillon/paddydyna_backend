@@ -114,5 +114,26 @@ class AddressController extends Controller
         return $this->success([], 'Address deleted successfully.', 200);
     }
 
+    public function defaultAddress($id)
+    {
+        $user = auth()->user();
+
+        if(!$user) {
+            return $this->error([], 'User not found', 404);
+        }
+
+        $data = Address::where('id', $id)->first();
+
+        if(!$data) {
+            return $this->error([], 'Address not found', 404);
+        }
+
+        $data->update([
+            'is_default' => 1
+        ]);
+
+        return $this->success($data, 'Set default address successfully.', 200);
+    }
+
     
 }

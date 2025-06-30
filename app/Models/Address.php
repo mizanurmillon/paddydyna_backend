@@ -11,6 +11,7 @@ class Address extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'is_default' => 'boolean',
     ];
 
     protected $hidden = [

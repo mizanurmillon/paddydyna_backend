@@ -83,6 +83,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         Route::post('/add/address', 'addAddress');
         Route::post('/update/address/{id}', 'updateAddress');
         Route::delete('/delete/address/{id}', 'deleteAddress');
+        Route::post('/default/address/{id}', 'defaultAddress');
     });
 
     Route::controller(ConnectAccount::class)->prefix('stripe/account')->group(function () {
