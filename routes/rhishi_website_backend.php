@@ -6,8 +6,10 @@ use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\BlogController;
 use App\Http\Controllers\Web\Backend\CMS\HeroSectionController;
 use App\Http\Controllers\Web\Backend\CMS\AboutSectionController;
+use App\Http\Controllers\Web\Backend\CMS\OurValueController;
 use App\Http\Controllers\Web\Backend\CMS\PlatformOverviewController;
 
+//Our Mission Routes
 Route::controller(OurMissionController::class)->group(function () {
     Route::get('/cms/our-mission', 'index')->name('admin.our_mission.index');
     Route::post('/cms/our-mission/update', 'update')->name('admin.our_mission.update');
@@ -75,4 +77,11 @@ Route::controller(PlatformOverviewController::class)->group(function () {
     Route::post('/cms/platform-overview/slider/update/{id}', 'sliderUpdate')->name('admin.platform_overview.slider.update');
     Route::post('/cms/platform-overview/slider/status/{id}', 'sliderStatus')->name('admin.platform_overview.slider.status');
     Route::delete('/cms/platform-overview/slider/destroy/{id}', 'sliderDestroy')->name('admin.platform_overview.slider.destroy');
+});
+
+//Our Value Routes
+Route::controller(OurValueController::class)->group(function () {
+    Route::get('/cms/our-value', 'index')->name('admin.our_value.index');
+    Route::get('/cms/our-value/{id}/update', 'edit')->name('admin.our_value.edit');
+    Route::post('/cms/our-value/update', 'update')->name('admin.our_value.update');
 });
