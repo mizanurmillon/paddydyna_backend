@@ -10,6 +10,8 @@ class Message extends Model
 
     protected $casts = [
         'is_read' => 'boolean',
+        'sender_id' => 'integer',
+        'receiver_id' => 'integer',
     ];
 
     protected $appends = ['formatted_date'];
