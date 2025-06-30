@@ -59,21 +59,20 @@ class BookingController extends Controller
 
         try {
 
-            $amountInCents = (int) ($request->total_amount * 100);
-
             $platformFee = SystemSetting::find(1);
 
-            $percentageToTake = $platformFee->platform_fee ?? 0; // e.g., 10
-            $percentageToTake = min($percentageToTake, 100);     // Just to be safe
+            $price             = $craftsperson->craftsperson->price ?? 0;  //$49
+            $platformFeeAmount = $platformFee->platform_fee ?? 0; 
 
-            $applicationFeeAmount = (int) ($amountInCents * ($percentageToTake / 100));
+            $totalAmountInCents   = (int) (($price + $platformFeeAmount) * 100); 
+            $applicationFeeAmount = (int) ($platformFeeAmount * 100);
 
             $checkoutSession = Session::create([
                 'payment_method_types' => ['card'],
                 'line_items'           => [[
                     'price_data' => [
-                        'currency'     => 'usd',
-                        'unit_amount'  => $amountInCents,
+                        'currency'     => 'eur',
+                        'unit_amount'  => $totalAmountInCents,
                         'product_data' => [
                             'name' => $craftsperson->name,
                         ],
@@ -103,8 +102,8 @@ class BookingController extends Controller
                     'address_id'           => $request->address_id,
                     'agree_to_terms'       => $request->agree_to_terms,
                     'platform_fee'         => $platformFee->platform_fee,
-                    'service_fee'          => $request->service_fee,
-                    'amount'               => $request->total_amount,
+                    'service_fee'          => $craftsperson->craftsperson->price,
+                    'amount'               => $totalAmountInCents / 100,
                     'success_redirect_url' => $request->success_redirect_url,
                     'cancel_redirect_url'  => $request->cancel_redirect_url,
                 ],
@@ -122,7 +121,6 @@ class BookingController extends Controller
         if (! $request->query('session_id')) {
             return $this->error([], 'Session ID not found.', 200);
         }
-
         DB::beginTransaction();
         try {
             $sessionId            = $request->query('session_id');
@@ -150,18 +148,19 @@ class BookingController extends Controller
             }
 
             $booking = Booking::create([
-                'user_id'             => $user_id,
-                'craftsperson_id'     => $craftsperson_id,
-                'service_type'        => $service_type,
-                'service_description' => $service_description,
-                'day'                 => $day,
-                'start_time'          => $start_time,
-                'end_time'            => $end_time,
-                'address_id'          => $address_id,
-                'platform_fee'        => $platformFee,
-                'service_fee'         => $service_fee,
-                'total_amount'        => $amount,
-                'agree_to_terms'      => $agree_to_terms,
+                'user_id'                  => $user_id,
+                'craftsperson_id'          => $craftsperson_id,
+                'service_type'             => $service_type,
+                'service_description'      => $service_description,
+                'day'                      => $day,
+                'start_time'               => $start_time,
+                'end_time'                 => $end_time,
+                'address_id'               => $address_id,
+                'platform_fee'             => $platformFee,
+                'service_fee'              => $service_fee,
+                'total_amount'             => $amount,
+                'stripe_payment_intent_id' => $checkoutSession->payment_intent,
+                'agree_to_terms'           => $agree_to_terms,
             ]);
 
             if (! $booking) {
@@ -294,16 +293,19 @@ class BookingController extends Controller
 
     public function completedBooking($id)
     {
-
         $user = auth()->user();
 
         if ($user->role == 'craftsperson') {
-            return $this->error([], 'You are not allowed to add booking', 400);
+            return $this->error([], 'You are not allowed to complete booking', 400);
         }
 
         $booking = Booking::find($id);
 
-        if ($booking->status == "cancelled") {
+        if (! $booking) {
+            return $this->error([], 'Booking not found', 404);
+        }
+
+        if ($booking->status == 'cancelled') {
             return $this->error([], 'Booking already cancelled', 400);
         }
 
@@ -311,22 +313,33 @@ class BookingController extends Controller
             return $this->error([], 'Booking already completed', 400);
         }
 
-        if (! $booking) {
-            return $this->error([], 'Booking not found', 404);
+        try {
+            // ✅ Stripe manual payment capture
+            if ($booking->stripe_payment_intent_id) {
+                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($booking->stripe_payment_intent_id);
+
+                if ($paymentIntent->status === 'requires_capture') {
+                    $paymentIntent->capture();
+                }
+            }
+
+            $booking->update([
+                'status' => 'completed',
+            ]);
+
+            $booking->craftsperson->notify(new UserNotification(
+                subject: 'Booking Completed',
+                message: 'Your booking has been completed',
+                type: 'booking',
+                channels: ['database'],
+            ));
+
+            return $this->success($booking, 'Booking completed and payment released successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
         }
-
-        $booking->update([
-            'status' => 'completed',
-        ]);
-
-        $booking->craftsperson->notify(new UserNotification(
-            subject: 'Booking Completed',
-            message: 'Your booking has been completed',
-            type: 'booking',
-            channels: ['database'],
-        ));
-
-        return $this->success($booking, 'Booking completed successfully', 200);
-
     }
+
 }
