@@ -54,7 +54,7 @@ class ChatController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        $messages = Message::with('sender:id,name,avatar', 'receiver:id,name,avatar', 'reactions')->select('id', 'sender_id', 'receiver_id', 'message', 'is_read', 'created_at')->where(function ($query) use ($user, $id) {
+        $messages = Message::with('sender:id,name,avatar', 'receiver:id,name,avatar', 'reactions')->select('id', 'sender_id', 'receiver_id','conversation_id', 'message', 'is_read', 'created_at')->where(function ($query) use ($user, $id) {
             $query->where('sender_id', $user->id)
                 ->where('receiver_id', $id);
         })->orWhere(function ($query) use ($user, $id) {
