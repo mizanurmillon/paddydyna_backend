@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-body d-flex justify-content-between">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">2</h1>
+                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">{{ $totalUsers }}</h1>
                                 <h4 class="fs-4 fw-semibold text-gray-400 mt-5">Total Users</h4>
                             </div>
                             <div>
@@ -98,7 +98,7 @@
                     <div class="card">
                         <div class="card-body d-flex justify-content-between">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">2</h1>
+                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">{{ $totalBlogs }}</h1>
                                 <h4 class="fs-4 fw-semibold text-gray-400 mt-5">Total Blog</h4>
                             </div>
                             <div>
@@ -159,8 +159,8 @@
                     <div class="card">
                         <div class="card-body d-flex justify-content-between">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">2</h1>
-                                <h4 class="fs-4 fw-semibold text-gray-400 mt-5">Total Service</h4>
+                                <h1 class="fs-2hx fw-bold text-gray-800 me-2 lh-1">{{ $totalCraftsperson }}</h1>
+                                <h4 class="fs-4 fw-semibold text-gray-400 mt-5">Total Craftsperson</h4>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -257,7 +257,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-4 col-lg-3 mt-4">
+                {{--  <div class="col-12 col-md-4 col-lg-3 mt-4">
                     <div class="card">
                         <div class="card-body d-flex justify-content-between">
                             <div>
@@ -278,7 +278,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  --}}
             </div>
         </div>
     </section>

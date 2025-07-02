@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Auth\OnBodingController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\GetCraftspersonController;
 use App\Http\Controllers\Api\HomePageController;
+use App\Http\Controllers\Api\MyToolBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,6 +155,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
          */
         Route::controller(ToolBookingController::class)->group(function () {
             Route::post('/tool-booking/{id}', 'toolBooking');
+            Route::get('/tool-booking-cancel/{id}', 'toolBookingCancel');
+            Route::get('/tool-booking-completed/{id}', 'toolBookingCompleted');
+        });
+
+        Route::controller(MyToolBookingController::class)->group(function () {
+            Route::get('/my-tool-booking', 'myToolBooking');
+            Route::get('/my-tool-booking/details/{id}', 'myToolBookingDetails');
         });
 
         Route::controller(ToolReviewController::class)->group(function () {
@@ -174,6 +182,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/job-request', 'jobRequest');
             Route::get('/job-request-accept/{id}', 'jobRequestAccept');
             Route::get('/job-request-cancel/{id}', 'jobRequestCancel');
+            Route::get('/job-in-progress/{id}', 'jobInProgress');
         });
 
         Route::controller(ToolController::class)->group(function () {

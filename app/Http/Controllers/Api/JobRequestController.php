@@ -11,33 +11,33 @@ use App\Notifications\UserNotification;
 class JobRequestController extends Controller
 {
     use ApiResponse;
-    
+
     public function jobRequest(Request $request)
     {
         $user = auth()->user();
 
-        if(!$user) {
+        if (!$user) {
             return $this->error([], 'User not found', 404);
         }
 
-        $query = Booking::with('user:id,name,avatar','address')->where('craftsperson_id', $user->id);
+        $query = Booking::with('user:id,name,avatar', 'address')->where('craftsperson_id', $user->id);
 
-        if($request->params == "job-request") {
+        if ($request->params == "job-request") {
             $query->where('status', 'pending');
         }
 
-        if($request->params == "my-jobs") {
+        if ($request->params == "my-jobs") {
             $query->where('status', 'confirmed');
         }
 
-        if($request->params == "completed") {
+        if ($request->params == "completed") {
             $query->where('status', 'completed');
         }
 
         $data = $query->latest()->get();
-        
-        if(!$data) {
-            return $this->error([],'Booking not found', 404);
+
+        if (!$data) {
+            return $this->error([], 'Booking not found', 404);
         }
 
         return $this->success($data, 'Booking found', 200);
@@ -47,17 +47,17 @@ class JobRequestController extends Controller
     {
         $user = auth()->user();
 
-        if(!$user) {
+        if (!$user) {
             return $this->error([], 'User not found', 404);
         }
 
         $booking = Booking::find($id);
 
-        if($booking->status == 'completed') {
+        if ($booking->status == 'completed') {
             return $this->error([], 'Booking already completed', 400);
         }
 
-        if(!$booking) {
+        if (!$booking) {
             return $this->error([], 'Booking not found', 404);
         }
 
@@ -74,17 +74,50 @@ class JobRequestController extends Controller
         return $this->success($booking, 'Booking accepted', 200);
     }
 
+    public function jobInProgress($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->error([], 'User not found', 404);
+        }
+
+        $booking = Booking::find($id);
+        if (!$booking) {
+            return $this->error([], 'Booking not found', 404);
+        }
+
+        if ($booking->status == 'completed') {
+            return $this->error([], 'Booking already completed', 400);
+        }
+
+        if ($booking->status == 'cancelled') {
+            return $this->error([], 'Booking has been cancelled', 400);
+        }
+
+        $booking->status = 'in_progress';
+        $booking->save();
+        $booking->user->notify(new UserNotification(
+            subject: 'Job In Progress',
+            message: 'Your job is now in progress',
+            type: 'booking',
+            channels: ['database'],
+        ));
+        
+        return $this->success($booking, 'Job in progress', 200);
+    }
+
     public function jobRequestCancel($id)
     {
         $user = auth()->user();
 
-        if(!$user) {
+        if (!$user) {
             return $this->error([], 'User not found', 404);
         }
 
         $booking = Booking::find($id);
 
-        if(!$booking) {
+        if (!$booking) {
             return $this->error([], 'Booking not found', 404);
         }
 

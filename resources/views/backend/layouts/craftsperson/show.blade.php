@@ -93,7 +93,7 @@
                                 <p>Service Fee: ${{ $data->craftsperson->price ?? 'N/A' }}/h</p>
 
                                 @php
-                                    $document = $data->craftsperson->police_verification_document;
+                                    $document = $data->craftsperson->police_verification_document ?? 'N/A';
                                     $extension = pathinfo($document, PATHINFO_EXTENSION);
                                     $isImage = in_array(strtolower($extension), [
                                         'jpg',
@@ -110,14 +110,14 @@
                                     @if ($isImage)
                                         <img src="{{ asset($document) }}" alt="Police Verification Document" width="100">
                                     @elseif($document)
-                                        <a href="{{ asset($document) }}" target="_blank">{{$document}}</a>
+                                        <a href="{{ asset($document) }}" target="_blank" download="download">{{$document}}</a>
                                     @else
                                         N/A
                                     @endif
                                 </p>
 
                                 @php
-                                    $documentID = $data->craftsperson->craftsperson_id;
+                                    $documentID = $data->craftsperson->craftsperson_id ?? 'N/A';
                                     $extension = pathinfo($documentID, PATHINFO_EXTENSION);
                                     $isImage = in_array(strtolower($extension), [
                                         'jpg',
@@ -133,7 +133,7 @@
                                     @if ($isImage)
                                         <img src="{{ asset($documentID) }}" alt="Police Verification Document" width="100">
                                     @elseif($documentID)
-                                        <a href="{{ asset($documentID) }}" target="_blank">{{$documentID}}</a>
+                                        <a href="{{ asset($documentID) }}" target="_blank" download="download">{{$documentID}}</a>
                                     @else
                                         N/A
                                     @endif

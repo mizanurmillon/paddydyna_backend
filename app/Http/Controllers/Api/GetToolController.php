@@ -24,7 +24,7 @@ class GetToolController extends Controller
 
         $stockedToolIds = ToolBooking::whereNot('status', 'completed')->whereNot('status', 'cancelled')->pluck('tool_id')->toArray();
 
-        $data = Tool::with(['images', 'user:id,name,avatar', 'user.addresses:id,user_id,address,latitude,longitude'])->select('id', 'user_id', 'name', 'price', 'deposit')->withAvg('toolReviews', 'rating')->get()
+        $data = Tool::with(['images', 'user:id,name,avatar', 'user.addresses:id,user_id,address,latitude,longitude,is_default'])->select('id', 'user_id', 'name', 'price', 'deposit')->withAvg('toolReviews', 'rating')->get()
             ->map(function ($tool) use ($user, $bookedToolIds, $stockedToolIds) {
 
                 // Format average rating

@@ -6,8 +6,10 @@ use App\Models\ToolBooking;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\SystemSetting;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Event\Telemetry\System;
 
 class ToolBookingController extends Controller
 {
@@ -35,6 +37,8 @@ class ToolBookingController extends Controller
             return $this->error([], 'You are not allowed to add booking', 400);
         }
 
+        $platform_fee = SystemSetting::where('id', 1)->first();
+
         $tool = Tool::with('availabilities')->find($id);
         // dd($tool->availabilities);
 
@@ -53,10 +57,10 @@ class ToolBookingController extends Controller
             'tool_id'      => $id,
             'name'         => $request->name,
             'description'  => $request->description,
-            'rent_fee'  => $request->rent_fee,
-            'deposit' => $request->deposit,
-            'platform_fee' => $request->platform_fee,
-            'total_amount' => $request->total_amount,
+            'rent_fee'  => $tool->price,
+            'deposit' => $tool->deposit,
+            'platform_fee' => $platform_fee->platform_fee,
+            'total_amount' => $tool->price + $tool->deposit + $platform_fee->platform_fee,
             'day'          => $request->day,
             'start_time'   => $request->start_time,
             'end_time'     => $request->end_time,
@@ -74,5 +78,45 @@ class ToolBookingController extends Controller
             channels: ['database'],
         ));
         return $this->success($data, 'Tool Booking added successfully', 200);
+    }
+
+    public function toolBookingCancel($id)
+    {
+        $user = auth()->user();
+
+        $toolBooking = ToolBooking::where('id', $id)->where('user_id', $user->id)->first();
+
+        if (!$toolBooking) {
+            return $this->error([], 'Tool booking not found', 404);
+        }
+
+        if ($toolBooking->status == 'completed') {
+            return $this->error([], 'You cannot cancel a completed booking', 400);
+        }
+
+        $toolBooking->status = 'cancelled';
+        $toolBooking->save();
+
+        return $this->success([], 'Tool booking cancelled successfully', 200);
+    }
+
+    public function toolBookingCompleted($id)
+    {
+        $user = auth()->user();
+
+        $toolBooking = ToolBooking::where('id', $id)->where('user_id', $user->id)->first();
+
+        if (!$toolBooking) {
+            return $this->error([], 'Tool booking not found', 404);
+        }
+
+        if ($toolBooking->status == 'cancelled') {
+            return $this->error([], 'You cannot complete a cancelled booking', 400);
+        }
+
+        $toolBooking->status = 'completed';
+        $toolBooking->save();
+
+        return $this->success([], 'Tool booking completed successfully', 200);
     }
 }
