@@ -1,12 +1,15 @@
 <?php
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -79,18 +82,22 @@ class User extends Authenticatable implements JWTSubject
 
     public function isAvailableForBooking($day, $start_time, $end_time)
     {
-        // Check if availability data exists
         if (! $this->craftsperson || $this->craftsperson->availability->isEmpty()) {
             return false;
         }
 
         foreach ($this->craftsperson->availability as $availability) {
-            if ($availability->day == $day) {
-                // Check if any overlap between booking and availability
-                if (
-                    ($start_time < $availability->end_time) &&
-                    ($end_time > $availability->start_time)
-                ) {
+            if (strtolower($availability->day) === strtolower($day)) {
+                try {
+                    $availStart = Carbon::parse($availability->start_time);
+                    $availEnd   = Carbon::parse($availability->end_time);
+                    $reqStart   = Carbon::parse($start_time);
+                    $reqEnd     = Carbon::parse($end_time);
+                } catch (\Exception $e) {
+                    return false; // If any time is invalid
+                }
+
+                if ($reqStart >= $availStart && $reqEnd <= $availEnd) {
                     return true;
                 }
             }
@@ -118,5 +125,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Conversation::class, 'participants');
     }
-
 }
