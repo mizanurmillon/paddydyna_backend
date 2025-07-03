@@ -51,6 +51,10 @@ class BookingController extends Controller
             return $this->error([], 'This craftsman is not available for this time slot', 400);
         }
 
+        if($craftsperson->stripe_account_id == null) {
+            return $this->error([], 'This craftsman is not connected to Stripe', 400);
+        }
+
         $booking = new Booking();
 
         // if($booking->overlaps($request->start_time, $request->end_time, $request->day)) {
