@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Tool extends Model
@@ -41,12 +42,17 @@ class Tool extends Model
         }
 
         foreach ($this->availabilities as $availability) {
-            if ($availability->day == $day) {
-                // Check if any overlap between booking and availability
-                if (
-                    ($start_time < $availability->end_time) &&
-                    ($end_time > $availability->start_time)
-                ) {
+             if (strtolower($availability->day) === strtolower($day)) {
+                try {
+                    $availStart = Carbon::parse($availability->start_time);
+                    $availEnd   = Carbon::parse($availability->end_time);
+                    $reqStart   = Carbon::parse($start_time);
+                    $reqEnd     = Carbon::parse($end_time);
+                } catch (\Exception $e) {
+                    return false;
+                }
+
+                if ($reqStart >= $availStart && $reqEnd <= $availEnd) {
                     return true;
                 }
             }
