@@ -108,8 +108,8 @@ class BookingController extends Controller
                     'platform_fee'         => $platformFee->platform_fee,
                     'service_fee'          => $craftsperson->craftsperson->price,
                     'amount'               => $totalAmountInCents / 100,
-                    'success_redirect_url' => $request->success_redirect_url,
-                    'cancel_redirect_url'  => $request->cancel_redirect_url,
+                    'success_redirect_url' => '/payment/success',
+                    'cancel_redirect_url'  => '/payment/cancel',
                 ],
             ]);
 
