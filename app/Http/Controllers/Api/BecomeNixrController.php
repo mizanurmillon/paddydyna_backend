@@ -21,6 +21,8 @@ class BecomeNixrController extends Controller
        $validator = Validator::make($request->all(), [
             'name'           => 'required|string|max:255',
             'email'    => 'required|string|email|unique:users,email',
+            'designation' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
             'role' => 'required|in:customer,craftsperson',
             'agree_to_terms' => 'required|boolean',
         ]);
@@ -34,6 +36,8 @@ class BecomeNixrController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'designation' => $request->designation,
+            'date_of_birth' => $request->date_of_birth,
             'password' => Hash::make($password),
             'role' => $request->role,
             'agree_to_terms' => $request->agree_to_terms
