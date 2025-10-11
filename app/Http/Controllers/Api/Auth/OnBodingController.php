@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Craftsperson;
 use App\Models\CraftspersonAvailability;
 use App\Models\CraftspersonServiceImage;
@@ -21,7 +23,7 @@ class OnBodingController extends Controller
     public function onBoarding(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'nullable|exists:categories,id',
             'price'       => 'required|string|max:255',
             'description' => 'required|string|max:50000',
             'images.*'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
@@ -46,17 +48,26 @@ class OnBodingController extends Controller
              */
             DB::beginTransaction();
 
+            // 1️⃣ Handle category (including optional "other")
+            $categoryId = $request->category_id;
+
+            if ($request->filled('other')) {
+                $otherCategory = Category::firstOrCreate(['name' => $request->other]);
+                $categoryId = $otherCategory->id;
+            }
+
             /**
              * Create craftspeople
              */
             $data = Craftsperson::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'category_id' => $request->category_id,
+                    'category_id' => $categoryId,
                     'price'       => $request->price,
                     'description' => $request->description,
                 ]
             );
+
 
             /**
              * Handle images
@@ -93,11 +104,9 @@ class OnBodingController extends Controller
             DB::commit();
             $data->load('category', 'images', 'availability');
             return $this->success($data, 'Onboarding successfully');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error([], $e->getMessage(), 500);
         }
-
     }
 }

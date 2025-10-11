@@ -88,7 +88,7 @@ class ChatController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->error('Validation Error.', $validator->errors());
         }
 
         $user = auth()->user();

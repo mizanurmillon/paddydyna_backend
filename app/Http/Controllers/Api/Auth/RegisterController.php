@@ -53,7 +53,9 @@ class RegisterController extends Controller
     {
         $rules = [
             'name'           => 'required|string|max:255',
+            'surname'        => 'required|string|max:255', // 'surname'
             'email'          => 'required|email|unique:users,email',
+            'phone'          => 'required|string|max:20',
             'role'           => 'required|in:customer,craftsperson',
             'password'       => [
                 'required',
@@ -66,7 +68,7 @@ class RegisterController extends Controller
 
         if ($request->input('role') == 'craftsperson') {
             $rules['craftsperson_id']               = 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:5120';
-            $rules['police_verification_document'] = 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:5120';
+            $rules['police_verification_document'] = 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:5120';
         }
 
         $messages = [
@@ -97,7 +99,9 @@ class RegisterController extends Controller
             // Find the user by ID
             $user                 = new User();
             $user->name           = $request->input('name');
+            $user->surname        = $request->input('surname');
             $user->email          = $request->input('email');
+            $user->phone          = $request->input('phone');
             $user->password       = Hash::make($request->input('password')); // Hash the password
             $user->role           = $request->input('role');
             $user->agree_to_terms = $request->input('agree_to_terms');
