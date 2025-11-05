@@ -14,6 +14,6 @@ jobs:
       - name: FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: ftp.softvencefsd.xyz
-          username: paddydyna@paddydyna.softvencefsd.xyz
-          password: "paddydyna.softvencefsd"
+          server: ftp.nixrly.com
+          username: u898743127.paddydynaBackend
+          password: "s;3z7]8>zrbFtX0S"

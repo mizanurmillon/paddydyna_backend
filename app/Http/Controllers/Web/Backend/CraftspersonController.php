@@ -86,9 +86,9 @@ class CraftspersonController extends Controller
             $data->save();
             
             $data->notify(new UserNotification(
-                subject: 'Account Blocked',
-                message: 'Your account has been blocked.',
-                type: 'account_blocked',
+                subject: 'Account Activated',
+                message: 'Your account has been activated.',
+                type: 'account_activated',
                 channels: ['database'],
             ));
             return response()->json([
