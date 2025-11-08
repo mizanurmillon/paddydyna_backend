@@ -21,4 +21,7 @@ Route::controller(CraftspersonController::class)->group(function () {
     Route::get('/craftsperson', 'index')->name('admin.craftsperson.index');
     Route::post('/craftsperson/{id}/status', 'status')->name('admin.craftsperson.status');
     Route::get('/craftsperson/{id}/show', 'show')->name('admin.craftsperson.show');
+
+    Route::get('/approve/{id}', 'approve')->name('admin.approve');
+    Route::get('/reject/{id}', 'reject')->name('admin.reject');
 });

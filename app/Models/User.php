@@ -51,7 +51,6 @@ class User extends Authenticatable implements JWTSubject
         'created_at',
         'updated_at',
         'deleted_at',
-        'status',
     ];
 
     /**
@@ -124,5 +123,10 @@ class User extends Authenticatable implements JWTSubject
     public function conversations()
     {
         return $this->belongsToMany(Conversation::class, 'participants');
+    }
+
+    public function userUpdate()
+    {
+        return $this->hasOne(UserUpdate::class);
     }
 }

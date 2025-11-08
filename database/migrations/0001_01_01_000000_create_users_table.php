@@ -27,7 +27,9 @@ return new class extends Migration
             $table->boolean('agree_to_terms')->default(false); // Field to store agreement to terms
             $table->string('stripe_account_id')->nullable();
             $table->enum('stripe_account_status',['NotTry', 'Enabled', 'Rejected'])->default('NotTry');
+            $table->string('driving_license_or_passport')->nullable();
             $table->enum('status', ['active', 'pending'])->default('pending');
+            $table->enum('update_status', ['pending', 'approved', 'rejected'])->default('approved');
             $table->rememberToken();
             $table->timestamps();
         });

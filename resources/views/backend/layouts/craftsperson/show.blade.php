@@ -71,7 +71,7 @@
             <div class="col-lg-8 col-md-4 order-0">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title" style="color: rgb(11 123 247) !important">Craftsperson Information
+                        <h4 class="card-title" style="color: rgb(11 123 247) !important">Current User Information
                             
                         </h4>
                         <div class="items-center mb-4">
@@ -80,9 +80,9 @@
                             <div>
                                 <p class="p-0 m-0 font-bold"
                                     style="font-size: 1.2rem; font-weight: bold; color:#004372 !important">
-                                    {{ $data->name ?? 'N/A' }}
+                                    {{ $data->name ?? 'N/A' }} {{ $data->surname ?? '' }}
                                 </p>
-                                <p>{{ $data->craftsperson->category->name ?? 'N/A' }}</p>
+                                <p>{{ $data->craftsperson->category->name ?? '' }}</p>
                                 <p class="p-0 m-0">Email: <span class="text-muted">{{ $data->email ?? 'N/A' }}</span> </p>
                                 <p class="p-0 m-0">Phone: <span class="text-muted">{{ $data->phone ?? 'N/A' }}
                                     </span></p>
@@ -90,7 +90,7 @@
                                             class="text-white badge @if ($data->status == 'active') badge-success @elseif($data->status == 'pending') badge-warning @endif) ">{{ $data->status ?? 'N/A' }}</span>
                                 </p>
 
-                                <p>Service Fee: ${{ $data->craftsperson->price ?? 'N/A' }}/h</p>
+                                <p>Service Fee: ${{ $data->craftsperson->price ?? '0' }}/h</p>
 
                                 @php
                                     $document = $data->craftsperson->police_verification_document ?? 'N/A';
@@ -138,6 +138,8 @@
                                         N/A
                                     @endif
                                 </p>
+
+                                
                             </div>
                         </div>
                     </div>
@@ -215,6 +217,71 @@
                 </div> --}}
             </div>
         </div>
+
+        @if($updatedData === null)
+           
+        @else
+        <div class="row mt-4">
+             <div class="col-lg-8 col-md-4 order-0">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title" style="color: rgb(11 123 247) !important">Requested User Information
+                            
+                        </h4>
+                        <div class="items-center mb-4">
+                            <img src="{{ asset($data->avatar ?? 'backend/images/profile.jpeg') }}" alt="Customer Image"
+                                class="rounded mb-2" style="width: 3rem; height: 3rem;">
+                            <div>
+                                <p class="p-0 m-0 font-bold"
+                                    style="font-size: 1.2rem; font-weight: bold; color:#004372 !important">
+                                    {{ $updatedData->name ?? 'N/A' }} {{ $updatedData->surname ?? '' }}
+                                </p>
+                                {{--  <p>{{ $data->craftsperson->category->name ?? 'N/A' }}</p>  --}}
+                                <p class="p-0 m-0">Email: <span class="text-muted">{{ $updatedData->email ?? 'N/A' }}</span> </p>
+                                <p class="p-0 m-0">Phone: <span class="text-muted">{{ $updatedData->phone ?? 'N/A' }}
+                                    </span></p>
+                                <p class="p-0 m-0"><span>Status: <span
+                                            class="text-white badge @if ($data->update_status == 'active') badge-success @elseif($data->update_status == 'pending') badge-warning @elseif($data->update_status == 'rejected') badge-danger @endif">{{ $data->update_status ?? 'N/A' }}</span>
+                                </p>
+
+                                <p>Date of Birth: <span class="text-muted">{{ $updatedData->date_of_birth ?? 'N/A' }}</span></p>
+
+                                @php
+                                    $document = $updatedData->driving_license_or_passport ?? 'N/A';
+                                    $extension = pathinfo($document, PATHINFO_EXTENSION);
+                                    $isImage = in_array(strtolower($extension), [
+                                        'jpg',
+                                        'jpeg',
+                                        'png',
+                                        'gif',
+                                        'bmp',
+                                        'webp',
+                                    ]);
+                                @endphp
+
+                                <p class="p-0">
+                                    Driving License or Passport:
+                                    @if ($isImage)
+                                        <img src="{{ asset($document) }}" alt="Driving License or Passport" width="100">
+                                    @elseif($document)
+                                        <a href="{{ asset($document) }}" target="_blank" download="download">{{$document}}</a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
+
+                                <div class="mt-4">
+                                    <a href="{{ route('admin.approve', $data->id) }}" class="btn btn-bg-success btn-sm text-white">Approve</a>
+                                    <a href="{{ route('admin.reject', $data->id) }}" class="btn btn-bg-danger btn-sm text-white">Reject</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
 

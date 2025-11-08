@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Web\Backend;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\UserUpdate;
 use App\Notifications\UserNotification;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class CraftspersonController extends Controller
@@ -14,7 +15,7 @@ class CraftspersonController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::where('role', 'craftsperson')->latest()->get();
+            $data = User::whereNot('role', 'admin')->latest()->get();
             if (!empty($request->input('search.value'))) {
                 $searchTerm = $request->input('search.value');
                 $data->where('name', 'LIKE', "%$searchTerm%");
@@ -102,6 +103,65 @@ class CraftspersonController extends Controller
     public function show(int $id)
     {
         $data = User::with('addresses','craftsperson','craftsperson.category','craftsperson.availability')->where('id', $id)->first();
-        return view('backend.layouts.craftsperson.show', compact('data'));
+
+        $updatedData = UserUpdate::where('user_id', $data->id)->first();
+
+        return view('backend.layouts.craftsperson.show', compact('data', 'updatedData'));
+    }
+
+    public function approve(int $id)
+    {
+        $userUpdate = UserUpdate::where('user_id', $id)->first();
+
+        if ($userUpdate) {
+            $user = User::where('id', $userUpdate->user_id)->first();
+            $user->name = $userUpdate->name ?? $user->name;
+            $user->surname = $userUpdate->surname ?? $user->surname;
+            $user->email = $userUpdate->email ?? $user->email;
+            $user->phone = $userUpdate->phone ?? $user->phone;
+            $user->date_of_birth = $userUpdate->date_of_birth ?? $user->date_of_birth;
+            $user->driving_license_or_passport = $userUpdate->driving_license_or_passport ?? $user->driving_license_or_passport;
+            $user->avatar = $userUpdate->avatar ?? $user->avatar;
+            $user->update_status = 'approved';
+
+            $user->save();
+
+            $userUpdate->delete();
+
+            $user->notify(new UserNotification(
+                subject: 'Update Approved',
+                message: 'Your profile update has been approved.',
+                type: 'update_approved',
+                channels: ['database'],
+            ));
+
+            return redirect()->route('admin.craftsperson.show', ['id' => $user->id])->with('t-success', 'User update approved successfully.');
+        }
+
+        return redirect()->route('admin.craftsperson.show', ['id' => $id])->with('t-error', 'No update request found for this user.');
+    }
+
+    public function reject(int $id)
+    {
+        $userUpdate = UserUpdate::where('user_id', $id)->first();
+
+        if ($userUpdate) {
+            $user = User::where('id', $userUpdate->user_id)->first();
+            $user->update_status = 'rejected';
+            $user->save();
+
+            $userUpdate->delete();
+
+            $user->notify(new UserNotification(
+                subject: 'Update Rejected',
+                message: 'Your profile update has been rejected.',
+                type: 'update_rejected',
+                channels: ['database'],
+            ));
+
+            return redirect()->route('admin.craftsperson.show', ['id' => $user->id])->with('t-success', 'User update rejected successfully.');
+        }
+
+        return redirect()->route('admin.craftsperson.show', ['id' => $id])->with('t-error', 'No update request found for this user.');
     }
 }

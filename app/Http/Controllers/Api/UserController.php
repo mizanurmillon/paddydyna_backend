@@ -10,7 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
     use ApiResponse;
 
     /**
@@ -19,12 +20,13 @@ class UserController extends Controller {
      * @return \Illuminate\Http\JsonResponse  JSON response with success or error.
      */
 
-    public function userData() {
+    public function userData()
+    {
 
         $user = User::with('addresses')->where('id', auth()->user()->id)->first();
 
-        if($user->role == "craftsperson") {
-            $user = User::with('addresses','craftsperson.category','craftsperson.availability','craftsperson.images')->where('id', auth()->user()->id)->first();
+        if ($user->role == "craftsperson") {
+            $user = User::with('addresses', 'craftsperson.category', 'craftsperson.availability', 'craftsperson.images')->where('id', auth()->user()->id)->first();
         }
 
         if (!$user) {
@@ -41,14 +43,17 @@ class UserController extends Controller {
      * @return \Illuminate\Http\JsonResponse  JSON response with success or error.
      */
 
-    public function userUpdate(Request $request) {
+    public function userUpdate(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'avatar'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
             'name'    => 'required|string|max:255',
+            'surname' => 'nullable|string|max:255',
             'email'   => 'nullable|string|email|max:255|unique:users,email,' . auth()->user()->id,
             'phone'   => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
+            'driving_license_or_passport' => 'nullable|file|mimes:jpeg,png,jpg,svg,pdf,doc,docx|max:10240',
         ]);
 
         if ($validator->fails()) {
@@ -65,29 +70,40 @@ class UserController extends Controller {
             }
 
             if ($request->hasFile('avatar')) {
-
-                if ($user->avatar) {
-                    $previousImagePath = public_path($user->avatar);
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
-                }
-
                 $image     = $request->file('avatar');
                 $imageName = uploadImage($image, 'User/Avatar');
             } else {
                 $imageName = $user->avatar;
             }
 
-            $user->name    = $request->name;
-            $user->email   = $request->email;
-            $user->phone   = $request->phone;
-            $user->date_of_birth = $request->date_of_birth;
-            $user->avatar  = $imageName;
+            if ($request->hasFile('driving_license_or_passport')) {
+                $image     = $request->file('driving_license_or_passport');
+                $imageName2 = uploadImage($image, 'User/DrivingLicenseOrPassport');
+            } else {
+                $imageName2 = $user->driving_license_or_passport;
+            }
+
+            // Update user details
+
+            $user->userUpdate()->updateOrCreate(
+                ['user_id' => $user->id], // condition
+                [
+                    'user_id' => $user->id,
+                    'name' => $request->name,
+                    'surname' => $request->surname,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'date_of_birth' => $request->date_of_birth,
+                    'avatar' => $imageName,
+                    'driving_license_or_passport' => $imageName2,
+                ]
+            );
+
+            $user->update_status = 'pending';
 
             $user->save();
 
-            return $this->success($user, 'User updated successfully', 200);
+            return $this->success($user, 'Your update request has been submitted for admin approval.', 200);
         } catch (\Exception $e) {
             return $this->error([], $e->getMessage(), 500);
         }
@@ -99,7 +115,8 @@ class UserController extends Controller {
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse JSON response with success or error.
      */
-    public function logoutUser() {
+    public function logoutUser()
+    {
 
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
@@ -108,7 +125,6 @@ class UserController extends Controller {
         } catch (\Exception $e) {
             return $this->error([], $e->getMessage(), 500);
         }
-
     }
 
     /**
@@ -116,7 +132,8 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse JSON response with success or error.
      */
-    public function deleteUser() {
+    public function deleteUser()
+    {
         try {
             // Get the authenticated user
             $user = auth()->user();
@@ -143,8 +160,9 @@ class UserController extends Controller {
         }
     }
 
-    public function changePassword(Request $request) {
-        
+    public function changePassword(Request $request)
+    {
+
         $validator = Validator::make($request->all(), [
             'current_password' => 'required|string|min:8',
             'new_password'     => 'required|string|min:8',
