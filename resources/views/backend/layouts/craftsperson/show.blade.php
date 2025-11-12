@@ -270,6 +270,30 @@
                                     @endif
                                 </p>
 
+                                 @php
+                                    $document = $updatedData->garda_vetting_certificate ?? 'N/A';
+                                    $extension = pathinfo($document, PATHINFO_EXTENSION);
+                                    $isImage = in_array(strtolower($extension), [
+                                        'jpg',
+                                        'jpeg',
+                                        'png',
+                                        'gif',
+                                        'bmp',
+                                        'webp',
+                                    ]);
+                                @endphp
+
+                                <p class="p-0">
+                                    Driving License or Passport:
+                                    @if ($isImage)
+                                        <img src="{{ asset($document) }}" alt="Driving License or Passport" width="100">
+                                    @elseif($document)
+                                        <a href="{{ asset($document) }}" target="_blank" download="download">{{$document}}</a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
+
                                 <div class="mt-4">
                                     <a href="{{ route('admin.approve', $data->id) }}" class="btn btn-bg-success btn-sm text-white">Approve</a>
                                     <a href="{{ route('admin.reject', $data->id) }}" class="btn btn-bg-danger btn-sm text-white">Reject</a>

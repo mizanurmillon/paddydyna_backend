@@ -54,6 +54,7 @@ class UserController extends Controller
             'phone'   => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
             'driving_license_or_passport' => 'nullable|file|mimes:jpeg,png,jpg,svg,pdf,doc,docx|max:10240',
+            'garda_vetting_certificate' => 'nullable|file|mimes:jpeg,png,jpg,svg,pdf,doc,docx|max:10240',
         ]);
 
         if ($validator->fails()) {
@@ -83,6 +84,14 @@ class UserController extends Controller
                 $imageName2 = $user->driving_license_or_passport;
             }
 
+            if($request->hasFile('garda_vetting_certificate')) {
+                $image     = $request->file('garda_vetting_certificate');
+                $imageName3 = uploadImage($image, 'User/GardaVettingCertificate');
+            } else {
+                $imageName3 = $user->garda_vetting_certificate;
+            }
+            
+
             // Update user details
 
             $user->userUpdate()->updateOrCreate(
@@ -96,6 +105,7 @@ class UserController extends Controller
                     'date_of_birth' => $request->date_of_birth,
                     'avatar' => $imageName,
                     'driving_license_or_passport' => $imageName2,
+                    'garda_vetting_certificate' => $imageName3
                 ]
             );
 

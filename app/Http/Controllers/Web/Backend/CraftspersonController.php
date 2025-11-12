@@ -121,6 +121,7 @@ class CraftspersonController extends Controller
             $user->phone = $userUpdate->phone ?? $user->phone;
             $user->date_of_birth = $userUpdate->date_of_birth ?? $user->date_of_birth;
             $user->driving_license_or_passport = $userUpdate->driving_license_or_passport ?? $user->driving_license_or_passport;
+            $user->garda_vetting_certificate = $userUpdate->garda_vetting_certificate ?? $user->garda_vetting_certificate;
             $user->avatar = $userUpdate->avatar ?? $user->avatar;
             $user->update_status = 'approved';
 

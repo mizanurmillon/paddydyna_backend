@@ -15,6 +15,7 @@ class UserUpdate extends Model
         'date_of_birth',
         'avatar',
         'driving_license_or_passport',
+        'garda_vetting_certificate',
     ];
 
     public function user()
